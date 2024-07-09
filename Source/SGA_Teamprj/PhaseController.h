@@ -8,17 +8,16 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "InputMappingContext.h"
+
 #include "PhaseController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TEAM_PROJECTA_API APhaseController : public APlayerController
+class SGA_TEAMPRJ_API APhaseController : public APlayerController
 {
 	GENERATED_BODY()
-	
-
 public:
 	APhaseController();
 
@@ -34,17 +33,18 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> IA_MoveForward;
+		TObjectPtr<class UInputAction> IA_MoveForward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> IA_Turn;
+		TObjectPtr<class UInputAction> IA_Turn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> IA_LookUp;
+		TObjectPtr<class UInputAction> IA_LookUp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> IA_Jump;
+		TObjectPtr<class UInputAction> IA_Jump;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputMappingContext> IMC_PhaseMovement;
+		TObjectPtr<class UInputMappingContext> IMC_PhaseMovement;
+
 };

@@ -28,12 +28,18 @@ APhaseCharacter::APhaseCharacter()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("SideViewCamera"));
 	Camera->SetupAttachment(SpringArm, USpringArmComponent::SocketName);
 	Camera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
 }
 
 // Called when the game starts or when spawned
 void APhaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (AlternateMeshAsset)
+	{
+		//PlayerMesh->SetSkeletalMesh(AlternateMeshAsset);
+	}
 }
 
 // Called every frame
@@ -43,7 +49,6 @@ void APhaseCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
 void APhaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -66,7 +71,7 @@ void APhaseCharacter::MoveForward(float Value)
 
 	//FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Z);
 	//AddMovementInput(Direction, Value);
-	
+
 	//AddMovementInput(FVector(Value), 2.0f);
 
 	/*FVector MovementVector = Value.Get<FVector>();
@@ -100,6 +105,3 @@ void APhaseCharacter::JumpStop()
 	bPressedJump = false;
 	StopJumping();
 }
-
-
-

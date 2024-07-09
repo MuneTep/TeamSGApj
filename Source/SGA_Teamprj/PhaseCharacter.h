@@ -14,7 +14,7 @@
 #include "PhaseCharacter.generated.h"
 
 UCLASS()
-class TEAM_PROJECTA_API APhaseCharacter : public ACharacter
+class SGA_TEAMPRJ_API APhaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -25,7 +25,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 
 public:	
 	// Called every frame
@@ -42,19 +41,25 @@ public:
 	void JumpStop();
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Input", meta = (AllowPrivate = "true"))
-	TObjectPtr<class UInputAction> IA_MoveForward;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivate = "true"))
-	TObjectPtr<class UInputAction> IA_Turn;
+		TObjectPtr<class UInputAction> IA_MoveForward;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivate = "true"))
-	TObjectPtr<class UInputAction> IA_LookUp;
+		TObjectPtr<class UInputAction> IA_Turn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivate = "true"))
-	TObjectPtr<class UInputAction> IA_Jump;
+		TObjectPtr<class UInputAction> IA_LookUp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivate = "true"))
+		TObjectPtr<class UInputAction> IA_Jump;
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivate = "true"))
-	TObjectPtr<class USpringArmComponent> SpringArm;
+		TObjectPtr<class USpringArmComponent> SpringArm;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivate = "true"))
-	TObjectPtr<class UCameraComponent> Camera;
+		TObjectPtr<class UCameraComponent> Camera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Assets")
+	USkeletalMesh* AlternateMeshAsset;
+
+	UPROPERTY(VisibleAnywhere, Category = SkeletalMesh)
+	class USkeletalMeshComponent* PlayerMesh;
 };

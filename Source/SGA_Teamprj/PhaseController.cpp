@@ -52,7 +52,7 @@ void APhaseController::MoveForward(const FInputActionValue& Value)
 		if (APhaseCharacter* MyPhase = Cast<APhaseCharacter>(ControlledPawn))
 		{
 			//MyCharacter->MoveForward(Value);
-			
+
 			MyPhase->MoveForward(Value.GetMagnitude());
 		}
 	}
