@@ -6,11 +6,18 @@ Content/ParagonKallari/
 Content/ParagonPhase/
 Content/ParagonRevenent/
 Content/ParagonSerath/
+Content/ParagonSparrow/
+Content/Assets/ParagonKallari/
+Content/Assets/ParagonPhase/
+Content/Assets/ParagonRevenent/
+Content/Assets/ParagonSerath/
+Content/Assets/ParagonSparrow/
 /Binaries
+/Config
 /DerivedDataCache
 /Intermediate
 /Saved
-/Config
+
 *.vsconfig
 
 ### UnrealEngine ###
