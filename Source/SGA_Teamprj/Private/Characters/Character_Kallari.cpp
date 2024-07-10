@@ -6,6 +6,14 @@ ACharacter_Kallari::ACharacter_Kallari() :Length(300.f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	//CameraBoom->SetupAttachment(GetRootComponent());
+	//CameraBoom->TargetArmLength = Length;
+	//CameraBoom->bUsePawnControlRotation = true;
+
+	//ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
+	//ViewCamera->SetupAttachment(CameraBoom);
+
 	SetCamera(CameraBoom, ViewCamera, Length);
 }
 

@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "DefaultCharacter.generated.h"
 
-UCLASS()
+UCLASS(Blueprintable, BlueprintType)
 class SGA_TEAMPRJ_API ADefaultCharacter : public ACharacter
 {
 	GENERATED_BODY()
