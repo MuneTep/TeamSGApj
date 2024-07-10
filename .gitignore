@@ -1,8 +1,15 @@
 # Created by https://www.toptal.com/developers/gitignore/api/unrealengine
 # Edit at https://www.toptal.com/developers/gitignore?templates=unrealengine
 
-/Confing
-/Content
+
+Content/ParagonKallari/
+Content/ParagonPhase/
+Content/ParagonRevenent/
+Content/ParagonSerath/
+/Binaries
+/DerivedDataCache
+/Intermediate
+/Saved
 *.vsconfig
 
 ### UnrealEngine ###
