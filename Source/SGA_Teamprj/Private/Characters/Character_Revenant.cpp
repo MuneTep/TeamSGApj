@@ -8,7 +8,7 @@ ACharacter_Revenant::ACharacter_Revenant()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetCamera(Revenant_CameraBoom, Revenant_ViewCamera, 500.f);
+	SetCamera();
 }
 
 void ACharacter_Revenant::BeginPlay() {
@@ -19,7 +19,7 @@ void ACharacter_Revenant::BeginPlay() {
 	Gun->SetOwner(this);
 }
 void ACharacter_Revenant::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
-void ACharacter_Revenant::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length) { Super::SetCamera(CameraBoom, ViewCamera, Length); }
+void ACharacter_Revenant::SetCamera() { Super::SetCamera(); }
 
 
 
