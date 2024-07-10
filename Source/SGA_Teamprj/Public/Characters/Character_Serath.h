@@ -16,11 +16,5 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* Serath_CameraBoom;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Serath_ViewCamera;
+	virtual void SetCamera() override;
 };

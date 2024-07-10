@@ -16,11 +16,5 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* Phase_CameraBoom;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Phase_ViewCamera;
+	virtual void SetCamera() override;
 };
