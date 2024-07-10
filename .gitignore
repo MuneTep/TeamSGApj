@@ -3,12 +3,12 @@
 
 *.vsconfig
 Content/ParagonRevenant/
-
+Config/
 Content/ParagonKallari/
 Content/ParagonPhase/
 Content/ParagonRevenant/
 Content/ParagonSerath/
-*.vsconfig
+
 
 ### UnrealEngine ###
 # Visual Studio 2015 user specific files
