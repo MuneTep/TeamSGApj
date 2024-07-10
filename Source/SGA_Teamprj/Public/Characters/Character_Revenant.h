@@ -5,7 +5,7 @@
 #include "Character_Revenant.generated.h"
 
 UCLASS()
-class TEAMPJ_API ACharacter_Revenant : public ADefaultCharacter
+class SGA_TEAMPRJ_API ACharacter_Revenant : public ADefaultCharacter
 {
 	GENERATED_BODY()
 	

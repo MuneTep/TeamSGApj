@@ -5,7 +5,7 @@
 #include "DefaultCharacter.generated.h"
 
 UCLASS()
-class TEAMPJ_API ADefaultCharacter : public ACharacter
+class SGA_TEAMPRJ_API ADefaultCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -21,8 +21,23 @@ protected:
 	void MoveRight(float Value);
 	void MouseX(float Value);
 	void MouseY(float Value);
-	//void SpaceBarJump();
+	void Jump();
 	//void StartRun();
 	//void StopRun();
 
+
+	// 공통된 변수 private
+private:
+	float attack;
+	float hp;
+	float moveSpeed;
+
+	// getter, setter
+public:
+	void setAtk(float _atk);
+	void setHP(float _hp);
+	void setSpeed(float _sp);
+	float getAtk();
+	float getHP();
+	float getSpeed();
 };

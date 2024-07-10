@@ -5,7 +5,7 @@
 #include "Character_Kallari.generated.h"
 
 UCLASS()
-class TEAMPJ_API ACharacter_Kallari : public ADefaultCharacter
+class SGA_TEAMPRJ_API ACharacter_Kallari : public ADefaultCharacter
 {
 	GENERATED_BODY()
 

@@ -27,6 +27,7 @@ protected:
 
 public:
 	void MoveForward(const FInputActionValue& Value);
+	void MoveRight(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
 	void Jump(const FInputActionValue& Value);
@@ -36,6 +37,9 @@ private:
 		TObjectPtr<class UInputAction> IA_MoveForward;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
+		TObjectPtr<class UInputAction> IA_MoveRight;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<class UInputAction> IA_Turn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
@@ -43,6 +47,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<class UInputAction> IA_Jump;
+
+
+	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<class UInputMappingContext> IMC_PhaseMovement;

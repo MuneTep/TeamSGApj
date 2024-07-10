@@ -5,7 +5,7 @@
 #include "Character_Serath.generated.h"
 
 UCLASS()
-class TEAMPJ_API ACharacter_Serath : public ADefaultCharacter
+class SGA_TEAMPRJ_API ACharacter_Serath : public ADefaultCharacter
 {
 	GENERATED_BODY()
 	

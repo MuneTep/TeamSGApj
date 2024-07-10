@@ -23,9 +23,11 @@ void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraCompon
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = Length;
+	CameraBoom->bUsePawnControlRotation = true;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
-	ViewCamera->SetupAttachment(CameraBoom);
+	ViewCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
+	ViewCamera->bUsePawnControlRotation = false;
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -71,4 +73,39 @@ void ADefaultCharacter::MouseX(float Value)
 void ADefaultCharacter::MouseY(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void ADefaultCharacter::Jump()
+{
+	Jump();
+}
+
+void ADefaultCharacter::setAtk(float _atk)
+{
+	attack = _atk;
+}
+
+void ADefaultCharacter::setHP(float _hp)
+{
+	hp = _hp;
+}
+
+void ADefaultCharacter::setSpeed(float _sp)
+{
+	moveSpeed = _sp;
+}
+
+float ADefaultCharacter::getAtk()
+{
+	return attack;
+}
+
+float ADefaultCharacter::getHP()
+{
+	return hp;
+}
+
+float ADefaultCharacter::getSpeed()
+{
+	return moveSpeed;
 }

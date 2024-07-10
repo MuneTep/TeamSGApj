@@ -5,7 +5,7 @@
 #include "Character_Sparrow.generated.h"
 
 UCLASS()
-class TEAMPJ_API ACharacter_Sparrow : public ADefaultCharacter
+class SGA_TEAMPRJ_API ACharacter_Sparrow : public ADefaultCharacter
 {
 	GENERATED_BODY()
 	
