@@ -2,16 +2,12 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=unrealengine
 
 
-Content/ParagonKallari/
-Content/ParagonPhase/
-Content/ParagonRevenant/
-Content/ParagonSerath/
-Content/ParagonSparrow/
-Content/Assets/ParagonKallari/
-Content/Assets/ParagonPhase/
-Content/Assets/ParagonRevenant/
-Content/Assets/ParagonSerath/
-Content/Assets/ParagonSparrow/
+Content/ParagonKallari/*
+Content/ParagonPhase/*
+Content/ParagonRevenant/*
+Content/ParagonSerath/*
+Content/ParagonSparrow/*
+
 /Binaries
 # /Config
 /DerivedDataCache
