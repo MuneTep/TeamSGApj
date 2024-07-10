@@ -13,7 +13,7 @@ Content/Assets/ParagonRevenant/
 Content/Assets/ParagonSerath/
 Content/Assets/ParagonSparrow/
 /Binaries
-/Config
+# /Config
 /DerivedDataCache
 /Intermediate
 /Saved
