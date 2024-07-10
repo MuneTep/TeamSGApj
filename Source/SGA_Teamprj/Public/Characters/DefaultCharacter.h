@@ -15,20 +15,38 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	virtual void BeginPlay() override;
-	virtual void SetCamera();
+	void KeyAxis(UInputComponent* PlayerInputComponent, ADefaultCharacter* Object, 
+		struct FInputAxisKeyMapping& KeyMapping, FName KeyName, FKey Key, float Scale, void(ADefaultCharacter::* Func)(float));
+	void KeyAxis(UInputComponent* PlayerInputComponent, ADefaultCharacter* Object, 
+		struct FInputAxisKeyMapping& KeyMapping1, FName KeyName1, FKey Key1, float Scale1, void(ADefaultCharacter::* Func1)(float), 
+		struct FInputAxisKeyMapping& KeyMapping2, FName KeyName2, FKey Key2, float Scale2, void(ADefaultCharacter::* Func2)(float));
+	void KeyAction(UInputComponent* PlayerInputComponent, ADefaultCharacter* Object,
+		struct FInputActionKeyMapping& KeyMapping, FName KeyName, FKey Key, EInputEvent KeyEvent, void(ADefaultCharacter::* Func)());
+	void KeyAction(UInputComponent* PlayerInputComponent, ADefaultCharacter* Object,
+		struct FInputActionKeyMapping& KeyMapping, FName KeyName, FKey Key, 
+		EInputEvent KeyEvent1, void(ADefaultCharacter::* Func1)(),
+		EInputEvent KeyEvent2, void(ADefaultCharacter::* Func2)());
+
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void CameraX(float Value);
 	void CameraY(float Value);
-	void SprintStart();
-	void SprintEnd();
+	void CameraLength(float Value);
+	void StartSprint();
+	void EndSprint();
+	void ToggleFollowMouseControl();
 
-protected:		// override해서 사용할 함수들
+protected:
 	float BaseSpeed;
 	float SprintMult;
 
-	virtual void Attack1();
+	virtual void BeginPlay() override;
+	virtual void SetCamera();
+	virtual void Attack();
+	virtual void Skill_1();
+	virtual void Skill_2();
+	virtual void Skill_3();
+	virtual void Skill_4();
 
 private:
 	UPROPERTY(VisibleAnywhere)

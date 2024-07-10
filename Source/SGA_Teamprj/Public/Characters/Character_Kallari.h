@@ -17,4 +17,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetCamera() override;
+	virtual void Attack() override;
+	virtual void Skill_1() override;
+	virtual void Skill_2() override;
+	virtual void Skill_3() override;
+	virtual void Skill_4() override;
 };
