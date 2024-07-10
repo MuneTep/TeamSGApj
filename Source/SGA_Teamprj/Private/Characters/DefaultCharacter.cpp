@@ -1,15 +1,18 @@
 #include "Characters/DefaultCharacter.h"
 #include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 
-ADefaultCharacter::ADefaultCharacter()
+ADefaultCharacter::ADefaultCharacter() : BaseSpeed(600.f), SprintMult(1.8f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate.Yaw = 720.f;
 }
 
 void ADefaultCharacter::BeginPlay()
@@ -22,15 +25,15 @@ void ADefaultCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ADefaultCharacter::SetCamera(class USpringArmComponent* Default_CameraBoom, class UCameraComponent* Default_ViewCamera, float Default_Length)
+void ADefaultCharacter::SetCamera()
 {
-	Default_CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	Default_CameraBoom->SetupAttachment(GetRootComponent());
-	Default_CameraBoom->TargetArmLength = Default_Length;
-	Default_CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(GetRootComponent());
+	CameraBoom->TargetArmLength = 300.f;
+	CameraBoom->bUsePawnControlRotation = true;
 
-	Default_ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
-	Default_ViewCamera->SetupAttachment(Default_CameraBoom);
+	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
+	ViewCamera->SetupAttachment(CameraBoom);
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -41,8 +44,8 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	FInputAxisKeyMapping KeyS = FInputAxisKeyMapping(FName("MoveForward"), EKeys::S, -1.f);
 	FInputAxisKeyMapping KeyD = FInputAxisKeyMapping(FName("MoveRight"), EKeys::D, 1.f);
 	FInputAxisKeyMapping KeyA = FInputAxisKeyMapping(FName("MoveRight"), EKeys::A, -1.f);
-	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("MouseX"), EKeys::MouseX, 1.f);
-	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("MouseY"), EKeys::MouseY, -1.f);
+	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("CameraX"), EKeys::MouseX, 1.f);
+	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("CameraY"), EKeys::MouseY, -1.f);
 	FInputActionKeyMapping KeySpacebar(FName("Jump"), EKeys::SpaceBar);
 	FInputActionKeyMapping KeyShift(FName("Run"), EKeys::LeftShift);
 
@@ -57,11 +60,11 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ADefaultCharacter::MoveRight);
-	PlayerInputComponent->BindAxis(FName("MouseX"), this, &ADefaultCharacter::MouseX);
-	PlayerInputComponent->BindAxis(FName("MouseY"), this, &ADefaultCharacter::MouseY);
+	PlayerInputComponent->BindAxis(FName("CameraX"), this, &ADefaultCharacter::CameraX);
+	PlayerInputComponent->BindAxis(FName("CameraY"), this, &ADefaultCharacter::CameraY);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
-	//PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::StartRun);
-	//PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::StopRun);
+	PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::SprintStart);
+	PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::SprintEnd);
 }
 
 void ADefaultCharacter::MoveForward(float Value)
@@ -86,12 +89,28 @@ void ADefaultCharacter::MoveRight(float Value)
 	}
 }
 
-void ADefaultCharacter::MouseX(float Value)
+void ADefaultCharacter::CameraX(float Value)
 {
 	AddControllerYawInput(Value);
 }
 
-void ADefaultCharacter::MouseY(float Value)
+void ADefaultCharacter::CameraY(float Value)
 {
 	AddControllerPitchInput(Value);
+}
+
+void ADefaultCharacter::SprintStart()
+{
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Green, TEXT("Called: SprintStart()"));
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * SprintMult;
+}
+
+void ADefaultCharacter::SprintEnd()
+{
+	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, TEXT("Called: SprintEnd()"));
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+}
+
+void ADefaultCharacter::Attack1()
+{
 }
