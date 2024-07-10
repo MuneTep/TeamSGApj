@@ -10,6 +10,7 @@ Content/ParagonSerath/
 /DerivedDataCache
 /Intermediate
 /Saved
+/Config
 *.vsconfig
 
 ### UnrealEngine ###
