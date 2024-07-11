@@ -1,10 +1,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Characters/DefaultCharacter.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+
 #include "Character_Phase.generated.h"
 
 UCLASS()
@@ -24,9 +26,9 @@ protected:
 
 	// 애니메이션 관련 함수, 변수
 	//UAnimMontage* PhaseMontage;
-	UAnimSequence* Anim;
-	void PlayAnim();
-	void UpdateAnim();
+	//UAnimSequence* Anim;
+	//void PlayAnim();
+	//void UpdateAnim();
 
 private:
 	UPROPERTY(VisibleAnywhere)
@@ -46,6 +48,6 @@ public:
 
 private:
 	// 애니메이션 모음
-	UAnimSequence* Anim_Idle;
-	UAnimSequence* Anim_JogFwd;
+	//UAnimSequence* Anim_Idle;
+	//UAnimSequence* Anim_JogFwd;
 };

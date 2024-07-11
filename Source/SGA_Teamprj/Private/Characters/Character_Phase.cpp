@@ -9,52 +9,53 @@ ACharacter_Phase::ACharacter_Phase()
 	SetCamera(Phase_CameraBoom, Phase_ViewCamera, 300.f);
 	setSpeed(100.f);
 
+	static ConstructorHelpers::FClassFinder<UAnimInstance> ABP_Phase(TEXT("/Game/Character_Phase/AB_Phase"));
+	if (ABP_Phase.Succeeded())
+	{
+		GetMesh()->SetAnimInstanceClass(ABP_Phase.Class);
+	}
+
 	// 애니메이션 초기화
-	static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_Idle(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Idle"));
-	static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_JogFwd(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Jog_Fwd"));
-
-	//static ConstructorHelpers::FObjectFinder<UAnimMontage> montageLoco(TEXT("/Game/Phase_LocoMontage"));
-
-	//PhaseMontage = montageLoco.Object;
-
-	Anim_Idle = anim_Idle.Object;
-	Anim_JogFwd = anim_JogFwd.Object;
-
-	Anim = Anim_Idle;
+	//static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_Idle(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Idle"));
+	//static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_JogFwd(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Jog_Fwd"));
+	//Anim_Idle = anim_Idle.Object;
+	//Anim_JogFwd = anim_JogFwd.Object;
+	//Anim = Anim_Idle;
 }
 
 void ACharacter_Phase::BeginPlay() 
 { 
 	Super::BeginPlay(); 
+
 }
 void ACharacter_Phase::Tick(float DeltaTime) { Super::Tick(DeltaTime); 
 	// UpdateAnim(); 
 }
 void ACharacter_Phase::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length) { ADefaultCharacter::SetCamera(CameraBoom, ViewCamera, Length); }
 
-// 선택된 애니메이션 플레이
-void ACharacter_Phase::PlayAnim()
-{
-	bool bLoop = true;
-	GetMesh()->PlayAnimation(Anim, bLoop);
-}
-
-void ACharacter_Phase::UpdateAnim()
-{
-	FVector velocity = GetVelocity();
-
-	if (!velocity.IsZero())
-	{
-		Anim = Anim_JogFwd;
-	}
-	else
-	{
-		Anim = Anim_Idle;
-	}
-
-	//if(Anim.is)
-	PlayAnim();
-}
+// 선택된 애니메이션 플레이, Sequence버전 레거시 코드
+//void ACharacter_Phase::PlayAnim()
+//{
+//	bool bLoop = true;
+//	GetMesh()->PlayAnimation(Anim, bLoop);
+//}
+//
+//void ACharacter_Phase::UpdateAnim()
+//{
+//	FVector velocity = GetVelocity();
+//
+//	if (!velocity.IsZero())
+//	{
+//		//Anim = Anim_JogFwd;
+//	}
+//	else
+//	{
+//		//Anim = Anim_Idle;
+//	}
+//
+//	//if(Anim.is)
+//	//PlayAnim();
+//}
 
 
 void ACharacter_Phase::playNiagara()
@@ -75,8 +76,8 @@ void ACharacter_Phase::playNiagara()
 void ACharacter_Phase::MoveForward(float Value)
 {
 	//playNiagara();
-	Anim = Anim_JogFwd;
-	PlayAnim();
+	//Anim = Anim_JogFwd;
+	//PlayAnim();
 	Super::MoveForward(Value);
 }
 
