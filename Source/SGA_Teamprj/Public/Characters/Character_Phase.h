@@ -44,7 +44,14 @@ public:
 	void MouseY(float Value);
 	void JumpStart(float Value);
 	void JumpEnd(float Value);
+	void CollisionCheck();
 
+
+	UFUNCTION()
+	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;	
+
+	UPROPERTY(EditAnywhere)
+	class UStaticMeshComponent* BoxMesh;
 
 private:
 	// 애니메이션 모음

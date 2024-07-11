@@ -1,5 +1,6 @@
 #include "Characters/Character_Phase.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 
 ACharacter_Phase::ACharacter_Phase()
@@ -8,6 +9,9 @@ ACharacter_Phase::ACharacter_Phase()
 
 	SetCamera(Phase_CameraBoom, Phase_ViewCamera, 300.f);
 	setSpeed(100.f);
+
+	BoxMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BoxMesh"));
+	RootComponent = BoxMesh;
 
 	static ConstructorHelpers::FClassFinder<UAnimInstance> ABP_Phase(TEXT("/Game/Character_Phase/AB_Phase"));
 	if (ABP_Phase.Succeeded())
@@ -95,6 +99,12 @@ void ACharacter_Phase::MouseY(float Value)
 {
 	Super::MouseY(Value);
 }
+
+void ACharacter_Phase::NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit)
+{
+	UE_LOG(LogTemp, Log, TEXT("NotifyHit"));
+}
+
 
 
 

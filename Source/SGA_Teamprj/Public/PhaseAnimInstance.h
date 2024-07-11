@@ -26,8 +26,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	float Direction;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Yaw;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float Pitch;
+
 
 	FRotator ActorRotation, ControlRotation, tempRotation;
 
