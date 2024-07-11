@@ -6,9 +6,6 @@
 ADefaultCharacter::ADefaultCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-	bUseControllerRotationPitch = false;
-	bUseControllerRotationRoll = false;
-	bUseControllerRotationYaw = false;
 }
 
 void ADefaultCharacter::BeginPlay()
@@ -20,40 +17,28 @@ void ADefaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
 void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length)
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
 	CameraBoom->TargetArmLength = Length;
-	CameraBoom->bUsePawnControlRotation = true;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
-	ViewCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	ViewCamera->bUsePawnControlRotation = false;
+	ViewCamera->SetupAttachment(CameraBoom);
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	FInputAxisKeyMapping KeyW = FInputAxisKeyMapping(FName("MoveForward"), EKeys::W, 1.f);
-	FInputAxisKeyMapping KeyS = FInputAxisKeyMapping(FName("MoveForward"), EKeys::S, -1.f);
-	FInputAxisKeyMapping KeyD = FInputAxisKeyMapping(FName("MoveRight"), EKeys::D, 1.f);
-	FInputAxisKeyMapping KeyA = FInputAxisKeyMapping(FName("MoveRight"), EKeys::A, -1.f);
-	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("MouseX"), EKeys::MouseX, 1.f);
-	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("MouseY"), EKeys::MouseY, -1.f);
-	FInputActionKeyMapping KeySpacebar(FName("Jump"), EKeys::SpaceBar);
-	FInputActionKeyMapping KeyShift(FName("Run"), EKeys::LeftShift);
-
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyW);
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyS);
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyD);
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyA);
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseX);
-	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseY);
-	UPlayerInput::AddEngineDefinedActionMapping(KeySpacebar);
-	UPlayerInput::AddEngineDefinedActionMapping(KeyShift);
-
+	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ADefaultCharacter::MoveForward);
+	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ADefaultCharacter::MoveRight);
+	PlayerInputComponent->BindAxis(FName("MouseX"), this, &ADefaultCharacter::MouseX);
+	PlayerInputComponent->BindAxis(FName("MouseY"), this, &ADefaultCharacter::MouseY);
+	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
+	//PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::StartRun);
+	//PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::StopRun);
 }
 
 void ADefaultCharacter::MoveForward(float Value)

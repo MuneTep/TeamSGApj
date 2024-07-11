@@ -2,13 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "Characters/DefaultCharacter.h"
-#include "Gun.h"
 #include "Character_Revenant.generated.h"
 
-
-
 UCLASS()
-class SGA_TEAMPRJ_API ACharacter_Revenant : public ADefaultCharacter
+class TEAMPJ_API ACharacter_Revenant : public ADefaultCharacter
 {
 	GENERATED_BODY()
 	
@@ -22,14 +19,8 @@ protected:
 	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* Revenant_CameraBoom;
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* Revenant_ViewCamera;
-
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<AGun> GunClass;
-
-	UPROPERTY()
-	AGun* Gun;
 };
