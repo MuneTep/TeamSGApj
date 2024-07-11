@@ -26,8 +26,13 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* SkillAction_01;
 
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* SkillAction_02;
+
 	void Attack();
 	void Skill_01();
+	void Skill_02_Start();
+	void Skill_02_Stop();
 
 	virtual void BeginPlay() override;
 	virtual void SetCamera() override;

@@ -19,6 +19,8 @@ class SGA_TEAMPRJ_API UMyAnimInstance : public UAnimInstance
 public:
 	void PlayAttackMontage();
 	void PlaySkillMonteage_01();
+	void PlaySkillMonteage_02_Start();
+	void PlaySkillMonteage_02_Stop();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
@@ -26,4 +28,11 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
 	UAnimMontage* SKillMontage_01;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* SKillMontage_02_Start;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	UAnimMontage* SKillMontage_02_Stop;
+
 };

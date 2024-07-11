@@ -23,3 +23,13 @@ void UMyAnimInstance::PlaySkillMonteage_01()
 {
 	Montage_Play(SKillMontage_01, 1.0f);
 }
+
+void UMyAnimInstance::PlaySkillMonteage_02_Start()
+{
+	Montage_Play(SKillMontage_02_Start, 1.0f);
+}
+
+void UMyAnimInstance::PlaySkillMonteage_02_Stop()
+{
+	Montage_Play(SKillMontage_02_Stop, 1.0f);
+}

@@ -36,6 +36,26 @@ void ACharacter_Serath::Skill_01()
 	AnimInstance->PlaySkillMonteage_01();
 }
 
+void ACharacter_Serath::Skill_02_Start()
+{
+	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	// 실패시 리턴
+	if (nullptr == AnimInstance)
+		return;
+
+	AnimInstance->PlaySkillMonteage_02_Start();
+}
+
+void ACharacter_Serath::Skill_02_Stop()
+{
+	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+	// 실패시 리턴
+	if (nullptr == AnimInstance)
+		return;
+
+	AnimInstance->PlaySkillMonteage_02_Stop();
+}
+
 void ACharacter_Serath::BeginPlay() { Super::BeginPlay(); }
 void ACharacter_Serath::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
 void ACharacter_Serath::SetCamera() { Super::SetCamera(); }
@@ -48,9 +68,7 @@ void ACharacter_Serath::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	{
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Triggered, this, &ACharacter_Serath::Attack);
 		EnhancedInputComponent->BindAction(SkillAction_01, ETriggerEvent::Triggered, this, &ACharacter_Serath::Skill_01);
+		EnhancedInputComponent->BindAction(SkillAction_02, ETriggerEvent::Triggered, this, &ACharacter_Serath::Skill_02_Start);
+		EnhancedInputComponent->BindAction(SkillAction_02, ETriggerEvent::Completed, this, &ACharacter_Serath::Skill_02_Stop);
 	}
-	
-
-	/*PlayerInputComponent->BindAction(TEXT("Attack"), EInputEvent::IE_Pressed, this, &ACharacter_Serath::Attack);*/
-
 }
