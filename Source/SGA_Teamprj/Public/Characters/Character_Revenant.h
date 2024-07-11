@@ -6,7 +6,6 @@
 #include "Character_Revenant.generated.h"
 
 
-
 UCLASS()
 class SGA_TEAMPRJ_API ACharacter_Revenant : public ADefaultCharacter
 {
@@ -19,7 +18,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
+	virtual void SetCamera() override;
 
 private:
 	UPROPERTY(EditDefaultsOnly)
@@ -32,4 +31,7 @@ private:
 
 	UPROPERTY()
 	AGun* Gun;
+
+	void Shoot();
+
 };
