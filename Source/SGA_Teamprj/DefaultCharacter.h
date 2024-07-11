@@ -45,6 +45,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* JumpAction;
 
+	/*UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* AttackAction;*/
+
+	//void Attack();
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 

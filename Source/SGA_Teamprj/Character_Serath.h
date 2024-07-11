@@ -20,6 +20,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* AttackAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* SkillAction_01;
+
+	void Attack();
+	void Skill_01();
+
 	virtual void BeginPlay() override;
 	virtual void SetCamera() override;
 };

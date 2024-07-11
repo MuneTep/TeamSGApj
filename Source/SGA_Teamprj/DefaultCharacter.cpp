@@ -11,6 +11,8 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 
+
+
 ADefaultCharacter::ADefaultCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -37,6 +39,16 @@ void ADefaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
+
+//void ADefaultCharacter::Attack()
+//{
+//	auto AnimInstance = Cast<UMyAnimInstance>(GetMesh()->GetAnimInstance());
+//		// 실패시 리턴
+//		if (nullptr == AnimInstance)
+//			return;
+//	
+//		AnimInstance->PlayAttackMontage();
+//}
 
 void ADefaultCharacter::Move(const FInputActionValue& Value)
 {
