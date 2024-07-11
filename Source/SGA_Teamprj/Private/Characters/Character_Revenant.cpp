@@ -15,7 +15,7 @@ void ACharacter_Revenant::BeginPlay() {
 	Super::BeginPlay();
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("weaponSocket"));
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("gun_pin"));
 	Gun->SetOwner(this);
 }
 void ACharacter_Revenant::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
