@@ -14,7 +14,7 @@ ACharacter_Revenant::ACharacter_Revenant()
 void ACharacter_Revenant::BeginPlay() {
 	Super::BeginPlay();
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
-	//GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
+	GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("weaponSocket"));
 	Gun->SetOwner(this);
 }
