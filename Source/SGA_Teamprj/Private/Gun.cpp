@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "Engine/DamageEvents.h"
 
 
 // Sets default values
@@ -33,16 +34,26 @@ void AGun::PullTrigger()
 
 	const FVector start = Location;
 	FVector End = Location + Rotation.Vector() * MaxRange;
-	// TODO : LineTrace
 
+	// TODO : LineTrace
 	FHitResult Hit;
 	bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1);
 	if (bSuccess)
 	{
-		DrawDebugLine(GetWorld(), Hit.Location, End, FColor::Red, false, 1.0f);
-		DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, true);
+		//화면 표시 때 사용한 drawdebug들
+		//DrawDebugLine(GetWorld(), Hit.Location, End, FColor::Red, false, 1.0f);
+		//DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, true);
+		//DrawDebugCamera(GetWorld(),Location,Rotation, 90, 2, FColor::Red, true);
+		FVector ShotDirection = -Rotation.Vector();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitMuzzleFlash, Hit.Location, ShotDirection.Rotation());
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor != nullptr)
+		{
+			FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
+
+			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
+		}
 	}
-	DrawDebugCamera(GetWorld(),Location,Rotation, 90, 2, FColor::Red, true);
 }
 
 // Called when the game starts or when spawned
