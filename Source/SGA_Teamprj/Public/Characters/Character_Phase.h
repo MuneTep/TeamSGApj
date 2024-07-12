@@ -5,6 +5,7 @@
 #include "Characters/DefaultCharacter.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 
 #include "Character_Phase.generated.h"
@@ -44,14 +45,32 @@ public:
 	void MouseY(float Value);
 	void JumpStart(float Value);
 	void JumpEnd(float Value);
-	void CollisionCheck();
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FCharacterHitSignature,
+		UPrimitiveComponent*, HitComponent,
+		AActor*, OtherActor,
+		UPrimitiveComponent*, OtherComponent,
+		FVector, NormalImpulse,
+		const FHitResult&, Hit);
 
+	// 이벤트 브로드캐스트
+	UPROPERTY(BlueprintAssignable, Category = "Character")
+		FCharacterHitSignature OnCharacterHit;
+
+protected:
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Character")
+	class UCapsuleComponent* MyCapsuleComponent;
+
+	// Called when the character hits something
 	UFUNCTION()
-	virtual void NotifyHit(UPrimitiveComponent* MyComp, AActor* Other, UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult& Hit) override;	
-
-	UPROPERTY(EditAnywhere)
-	class UStaticMeshComponent* BoxMesh;
+		void HandleCharacterHit(
+			UPrimitiveComponent* HitComponent,
+			AActor* OtherActor,
+			UPrimitiveComponent* OtherComponent,
+			FVector NormalImpulse,
+			const FHitResult& Hit
+		);
 
 private:
 	// 애니메이션 모음

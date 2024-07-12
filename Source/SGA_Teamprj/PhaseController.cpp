@@ -44,8 +44,8 @@ void APhaseController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(IA_MoveRight.Get(), ETriggerEvent::Triggered, this, &APhaseController::MoveRight);
 		EnhancedInputComponent->BindAction(IA_Turn.Get(), ETriggerEvent::Triggered, this, &APhaseController::Turn);
 		EnhancedInputComponent->BindAction(IA_LookUp.Get(), ETriggerEvent::Triggered, this, &APhaseController::LookUp);
-		EnhancedInputComponent->BindAction(IA_Jump.Get(), ETriggerEvent::Started, this, &APhaseController::LookUp);
-		EnhancedInputComponent->BindAction(IA_Jump.Get(), ETriggerEvent::Completed, this, &APhaseController::LookUp);
+		EnhancedInputComponent->BindAction(IA_Jump.Get(), ETriggerEvent::Started, this, &APhaseController::Jump);
+		EnhancedInputComponent->BindAction(IA_Jump.Get(), ETriggerEvent::Completed, this, &APhaseController::Jump);
 	}
 }
 
@@ -108,7 +108,7 @@ void APhaseController::Jump(const FInputActionValue& Value)
 	{
 		if (ACharacter_Phase* MyPhase = Cast<ACharacter_Phase>(ControlledPawn))
 		{
-			//MyPhase->JumpStart();
+			MyPhase->JumpStart(Value.GetMagnitude());
 		}
 	}
 }
