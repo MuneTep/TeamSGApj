@@ -22,7 +22,7 @@ AGun::AGun()
 
 void AGun::PullTrigger()
 {
-	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("gunEffect"));
+	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("Muzzle_02"));
 	APawn* OwnerPawn = Cast<APawn>(GetOwner());
 	if (OwnerPawn == nullptr)return;
 	AController* OwnerController = OwnerPawn->GetController();
@@ -50,7 +50,6 @@ void AGun::PullTrigger()
 		if (HitActor != nullptr)
 		{
 			FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
-
 			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
 		}
 	}

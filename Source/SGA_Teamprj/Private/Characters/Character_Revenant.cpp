@@ -16,15 +16,21 @@ void ACharacter_Revenant::BeginPlay() {
 	//타이머 적용
 	FireTimer = 0;
 	isAiming = false;
+	Health = MaxHealth;
+
 	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
 	//건 적요
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("gun_real_barrel"));
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("gun_pin"));
 	Gun->SetOwner(this);
 }
-void ACharacter_Revenant::Tick(float DeltaTime) { Super::Tick(DeltaTime); }
+void ACharacter_Revenant::Tick(float DeltaTime)
+{ 
+	Super::Tick(DeltaTime);
+
+}
 void ACharacter_Revenant::SetCamera() { Super::SetCamera(); }
 void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -33,6 +39,20 @@ void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Released, this, &ACharacter_Revenant::ShootRelease);
 	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Pressed, this, &ACharacter_Revenant::Aim);
 	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Released, this, &ACharacter_Revenant::Aim);
+}
+
+float ACharacter_Revenant::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float DamageToApply = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+	DamageToApply = FMath::Min(Health, DamageToApply);
+	Health -= DamageToApply;
+	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
+	return DamageToApply;
+}
+
+bool ACharacter_Revenant::IsDead() const
+{
+	return Health <= 0;
 }
 
 bool ACharacter_Revenant::Aiming()
@@ -48,6 +68,7 @@ void ACharacter_Revenant::Aim()
 
 void ACharacter_Revenant::Shoot()
 {
+	Gun->PullTrigger();
 	if (isAiming)
 	{
 		if (CanShoot)
@@ -72,7 +93,7 @@ void ACharacter_Revenant::CheckFireRate()
 	FireTimer = FireTimer - 0.2f;
 	if (FireTimer <= 0)
 	{
-		CanShoot=true;
+		//CanShoot=true;
 		ResetFireRate();
 	}
 }
