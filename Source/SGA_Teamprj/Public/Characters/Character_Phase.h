@@ -43,8 +43,6 @@ public:
 	void MoveRight(float Value);
 	void MouseX(float Value);
 	void MouseY(float Value);
-	void JumpStart(float Value);
-	void JumpEnd(float Value);
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FCharacterHitSignature,
 		UPrimitiveComponent*, HitComponent,

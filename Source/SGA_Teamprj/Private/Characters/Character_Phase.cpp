@@ -107,11 +107,6 @@ void ACharacter_Phase::MouseY(float Value)
 	Super::MouseY(Value);
 }
 
-void ACharacter_Phase::JumpStart(float Value)
-{
-	Super::Jump();                  
-}
-
 void ACharacter_Phase::HandleCharacterHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	OnCharacterHit.Broadcast(HitComponent, OtherActor, OtherComponent, NormalImpulse, Hit);

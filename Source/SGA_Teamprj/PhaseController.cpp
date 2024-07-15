@@ -108,7 +108,8 @@ void APhaseController::Jump(const FInputActionValue& Value)
 	{
 		if (ACharacter_Phase* MyPhase = Cast<ACharacter_Phase>(ControlledPawn))
 		{
-			MyPhase->JumpStart(Value.GetMagnitude());
+			//MyPhase->JumpStart(Value.GetMagnitude());
+			//MyPhase->Super::Jump(Value.GetMagnitude());
 		}
 	}
 }
