@@ -38,7 +38,7 @@ void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Pressed, this, &ACharacter_Revenant::Shoot);
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Released, this, &ACharacter_Revenant::ShootRelease);
 	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Pressed, this, &ACharacter_Revenant::Aim);
-	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Released, this, &ACharacter_Revenant::Aim);
+	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Released, this, &ACharacter_Revenant::AimRelease);
 }
 
 float ACharacter_Revenant::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -55,15 +55,15 @@ bool ACharacter_Revenant::IsDead() const
 	return Health <= 0;
 }
 
-bool ACharacter_Revenant::Aiming()
-{
-
-	return CanShoot;
-}
 
 void ACharacter_Revenant::Aim()
 {
 	isAiming = true;
+}
+
+void ACharacter_Revenant::AimRelease()
+{
+	isAiming = false;
 }
 
 void ACharacter_Revenant::Shoot()

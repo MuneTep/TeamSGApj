@@ -50,13 +50,14 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	bool isShoot;
+
 	UPROPERTY(EditAnywhere)
-	bool CanShoot;
 	bool isAiming;
-	UFUNCTION(BlueprintCallable)
-	bool Aiming();
+	bool CanShoot;
+
 	UFUNCTION(BlueprintCallable)
 	void Aim();
+	void AimRelease();
 	void Shoot();
 	void ShootRelease();
 	void CheckFireRate();
