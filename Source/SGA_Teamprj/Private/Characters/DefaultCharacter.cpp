@@ -1,6 +1,9 @@
 #include "Characters/DefaultCharacter.h"
 #include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+
 #include "Camera/CameraComponent.h"
 
 ADefaultCharacter::ADefaultCharacter()
@@ -16,6 +19,7 @@ void ADefaultCharacter::BeginPlay()
 void ADefaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CameraSmooth(DeltaTime);
 }
 
 void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length)
@@ -25,9 +29,12 @@ void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraCompon
 	CameraBoom->TargetArmLength = Length;
 	CameraBoom->bUsePawnControlRotation = true;
 
+	OriginCameraBoom = CameraBoom;
+
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	ViewCamera->bUsePawnControlRotation = false;
+	OriginViewCamera = ViewCamera;
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -39,6 +46,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(FName("MouseX"), this, &ADefaultCharacter::MouseX);
 	PlayerInputComponent->BindAxis(FName("MouseY"), this, &ADefaultCharacter::MouseY);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
+	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &ADefaultCharacter::Attack);
 	//PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::StartRun);
 	//PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::StopRun);
 }
@@ -77,35 +85,47 @@ void ADefaultCharacter::MouseY(float Value)
 
 void ADefaultCharacter::Jump()
 {
-	Jump();
+	Super::Jump();
 }
 
-void ADefaultCharacter::setAtk(float _atk)
+void ADefaultCharacter::Attack()
 {
-	attack = _atk;
+
 }
 
-void ADefaultCharacter::setHP(float _hp)
+void ADefaultCharacter::CameraSmooth(float DeltaTime)
 {
-	hp = _hp;
+	float MaxCameraArmLength = 300.0f;
+	float CameraArmLength = MaxCameraArmLength;
+
+	if (OriginCameraBoom != nullptr)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("CameraSmooth"))
+
+		FVector Start = OriginCameraBoom->GetComponentLocation();
+		FVector End = UKismetMathLibrary::GetDirectionUnitVector(Start, OriginViewCamera->GetComponentLocation()) * MaxCameraArmLength + Start;
+		TArray<AActor*> ToIgnore;
+		FHitResult OutCameraHit;
+		bool IsCameraHit = UKismetSystemLibrary::SphereTraceSingle(
+			GetWorld(), Start, End,
+			OriginCameraBoom->ProbeSize,
+			ETraceTypeQuery::TraceTypeQuery1, true,
+			ToIgnore,
+			EDrawDebugTrace::None, OutCameraHit, true);
+
+		if (IsCameraHit)
+		{
+			CameraArmLength = UKismetMathLibrary::Clamp(OutCameraHit.Distance - OriginCameraBoom->ProbeSize, 30, MaxCameraArmLength);
+		}
+
+		OriginCameraBoom->TargetArmLength = UKismetMathLibrary::FInterpTo(OriginCameraBoom->TargetArmLength, CameraArmLength, DeltaTime, 10);
+	}
+
 }
 
-void ADefaultCharacter::setSpeed(float _sp)
-{
-	moveSpeed = _sp;
-}
-
-float ADefaultCharacter::getAtk()
-{
-	return attack;
-}
-
-float ADefaultCharacter::getHP()
-{
-	return hp;
-}
-
-float ADefaultCharacter::getSpeed()
-{
-	return moveSpeed;
-}
+void ADefaultCharacter::setAtk(float _atk){	attack = _atk;}
+void ADefaultCharacter::setHP(float _hp){hp = _hp;}
+void ADefaultCharacter::setSpeed(float _sp){moveSpeed = _sp;}
+float ADefaultCharacter::getAtk(){return attack;}
+float ADefaultCharacter::getHP(){return hp;}
+float ADefaultCharacter::getSpeed(){return moveSpeed;}

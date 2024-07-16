@@ -24,13 +24,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
 
-
-	// 애니메이션 관련 함수, 변수
-	//UAnimMontage* PhaseMontage;
-	//UAnimSequence* Anim;
-	//void PlayAnim();
-	//void UpdateAnim();
-
 private:
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* Phase_CameraBoom;
@@ -38,11 +31,14 @@ private:
 	UCameraComponent* Phase_ViewCamera;
 
 	void playNiagara();
+	bool bIsAttack;
+
 public:
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void MouseX(float Value);
 	void MouseY(float Value);
+	void Attack();
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FCharacterHitSignature,
 		UPrimitiveComponent*, HitComponent,
@@ -53,7 +49,8 @@ public:
 
 	// 이벤트 브로드캐스트
 	UPROPERTY(BlueprintAssignable, Category = "Character")
-		FCharacterHitSignature OnCharacterHit;
+	FCharacterHitSignature OnCharacterHit;
+
 
 protected:
 
@@ -70,8 +67,6 @@ protected:
 			const FHitResult& Hit
 		);
 
-private:
-	// 애니메이션 모음
-	//UAnimSequence* Anim_Idle;
-	//UAnimSequence* Anim_JogFwd;
+	//UPhaseAnimInstance* AnimInstance;
+
 };

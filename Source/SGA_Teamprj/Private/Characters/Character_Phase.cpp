@@ -1,7 +1,10 @@
 #include "Characters/Character_Phase.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "Camera/CameraComponent.h"
+#include "PhaseAnimInstance.h"
 
 ACharacter_Phase::ACharacter_Phase()
 {
@@ -37,11 +40,16 @@ ACharacter_Phase::ACharacter_Phase()
 void ACharacter_Phase::BeginPlay() 
 { 
 	Super::BeginPlay(); 
-
 }
-void ACharacter_Phase::Tick(float DeltaTime) { Super::Tick(DeltaTime); 
+
+void ACharacter_Phase::Tick(float DeltaTime) { 
+	Super::Tick(DeltaTime); 
+
 	// UpdateAnim(); 
 }
+
+
+
 void ACharacter_Phase::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length) { ADefaultCharacter::SetCamera(CameraBoom, ViewCamera, Length); }
 
 // 선택된 애니메이션 플레이, Sequence버전 레거시 코드
@@ -72,7 +80,7 @@ void ACharacter_Phase::SetCamera(USpringArmComponent* CameraBoom, UCameraCompone
 void ACharacter_Phase::playNiagara()
 {
 	USkeletalMeshComponent* skeletalMeshComponent = this->GetMesh();
-	UNiagaraSystem* sparkleSystem = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Game/FxTutorial/NS_ShockwaveTutorial_FX"));
+	UNiagaraSystem* sparkleSystem = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Game/ParagonPhase/FX/Particles/Abilities/Flash/FX/P_PhaseFlash"));
 
 	if(skeletalMeshComponent && sparkleSystem)
 	{
@@ -107,10 +115,19 @@ void ACharacter_Phase::MouseY(float Value)
 	Super::MouseY(Value);
 }
 
+void ACharacter_Phase::Attack()
+{
+	//bIsAttack = true;
+	playNiagara();
+	Super::Attack();
+}
+
+
 void ACharacter_Phase::HandleCharacterHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	OnCharacterHit.Broadcast(HitComponent, OtherActor, OtherComponent, NormalImpulse, Hit);
 }
+
 
 void ACharacter_Phase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) { Super::SetupPlayerInputComponent(PlayerInputComponent); }
 

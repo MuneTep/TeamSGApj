@@ -18,6 +18,8 @@ void UPhaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	ControlRotation = Pawn->GetControlRotation();
 	
 	tempRotation = UKismetMathLibrary::NormalizedDeltaRotator(ActorRotation, ControlRotation);
+
+	
 	
 
 	//Yaw = FMath::RInterpTo(, tempRotation, DeltaSeconds, 1.0f);

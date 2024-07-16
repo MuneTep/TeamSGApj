@@ -30,7 +30,7 @@ public:
 	void MoveRight(const FInputActionValue& Value);
 	void Turn(const FInputActionValue& Value);
 	void LookUp(const FInputActionValue& Value);
-	void Jump(const FInputActionValue& Value);
+	//void Jump(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
@@ -45,8 +45,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
 		TObjectPtr<class UInputAction> IA_LookUp;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
-		TObjectPtr<class UInputAction> IA_Jump;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input", meta = (AllowPrivateAccess = "true"))
+	//	TObjectPtr<class UInputAction> IA_Jump;
 
 
 	

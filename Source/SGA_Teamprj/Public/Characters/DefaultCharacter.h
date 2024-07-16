@@ -22,15 +22,22 @@ protected:
 	void MouseX(float Value);
 	void MouseY(float Value);
 	void Jump();
+	void Attack();
 	//void StartRun();
 	//void StopRun();
 
-
+	void CameraSmooth(float DeltaTime);
 	// 공통된 변수 private
 private:
 	float attack;
 	float hp;
 	float moveSpeed;
+
+	UPROPERTY(VisibleAnywhere)
+	USpringArmComponent* OriginCameraBoom;
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* OriginViewCamera;
+
 
 	// getter, setter
 public:

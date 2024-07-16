@@ -31,6 +31,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float Pitch;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bIsAttack;
 
 	FRotator ActorRotation, ControlRotation, tempRotation;
 
