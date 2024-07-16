@@ -19,8 +19,8 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
-
-
+	void Shoot();
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetCamera() override;
@@ -39,14 +39,16 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float Health;
 
+
+
+	float FireTimer;
+	FTimerHandle Handle;
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
 
 	UPROPERTY()
 	AGun* Gun;
-
-	float FireTimer;
-	FTimerHandle Handle;
 
 	UPROPERTY(EditAnywhere)
 	bool isShoot;
@@ -58,7 +60,7 @@ private:
 	UFUNCTION(BlueprintCallable)
 	void Aim();
 	void AimRelease();
-	void Shoot();
+
 	void ShootRelease();
 	void CheckFireRate();
 	void ResetFireRate();
