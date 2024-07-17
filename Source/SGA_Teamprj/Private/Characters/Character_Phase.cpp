@@ -122,6 +122,16 @@ void ACharacter_Phase::Attack()
 	Super::Attack();
 }
 
+void ACharacter_Phase::ZoomIn( )
+{
+	Super::ZoomIn();
+}
+
+void ACharacter_Phase::ZoomOut( )
+{
+	Super::ZoomOut();
+}
+
 
 void ACharacter_Phase::HandleCharacterHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {

@@ -39,6 +39,8 @@ public:
 	void MouseX(float Value);
 	void MouseY(float Value);
 	void Attack();
+	void ZoomIn();
+	void ZoomOut();
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FCharacterHitSignature,
 		UPrimitiveComponent*, HitComponent,
