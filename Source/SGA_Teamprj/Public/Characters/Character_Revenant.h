@@ -39,7 +39,10 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float Health;
 
-
+	UFUNCTION()
+	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	
+	class UAnimInstance* MyAnim;
 
 	float FireTimer;
 	FTimerHandle Handle;

@@ -2,6 +2,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 
 ACharacter_Revenant::ACharacter_Revenant()
@@ -17,13 +18,16 @@ void ACharacter_Revenant::BeginPlay() {
 	FireTimer = 0;
 	isAiming = false;
 	Health = MaxHealth;
+	MyAnim = Cast<UAnimInstance>(GetMesh()->GetAnimInstance());
+	check(nullptr != MyAnim);
+	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
 
 	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
 	//°Ç Àû¿ä
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
-	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("gun_pin"));
+	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("hand_lSocket"));
 	Gun->SetOwner(this);
 }
 void ACharacter_Revenant::Tick(float DeltaTime)
@@ -39,6 +43,7 @@ void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	PlayerInputComponent->BindAction(TEXT("Shoot"), EInputEvent::IE_Released, this, &ACharacter_Revenant::ShootRelease);
 	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Pressed, this, &ACharacter_Revenant::Aim);
 	PlayerInputComponent->BindAction(TEXT("Aim"), EInputEvent::IE_Released, this, &ACharacter_Revenant::AimRelease);
+
 }
 
 float ACharacter_Revenant::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
@@ -47,6 +52,11 @@ float ACharacter_Revenant::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	DamageToApply = FMath::Min(Health, DamageToApply);
 	Health -= DamageToApply;
 	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
+	if (IsDead())
+	{
+		DetachFromControllerPendingDestroy();
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
 	return DamageToApply;
 }
 
@@ -66,6 +76,8 @@ void ACharacter_Revenant::AimRelease()
 	isAiming = false;
 }
 
+
+
 void ACharacter_Revenant::Shoot()
 {
 	Gun->PullTrigger();
@@ -82,6 +94,9 @@ void ACharacter_Revenant::Shoot()
 			isShoot = false;
 		}
 	}
+}
+void ACharacter_Revenant::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
+{
 }
 void ACharacter_Revenant::ShootRelease()
 {
