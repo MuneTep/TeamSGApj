@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
+#include "RevenantGameModeBase.h"
 
 ACharacter_Revenant::ACharacter_Revenant()
 {
@@ -14,15 +15,13 @@ ACharacter_Revenant::ACharacter_Revenant()
 
 void ACharacter_Revenant::BeginPlay() {
 	Super::BeginPlay();
-	//타이머 적용
-	FireTimer = 0;
-	isAiming = false;
+
 	Health = MaxHealth;
 	MyAnim = Cast<UAnimInstance>(GetMesh()->GetAnimInstance());
 	check(nullptr != MyAnim);
 	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
 
-	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
+	//GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
 	//건 적요
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
@@ -54,8 +53,14 @@ float ACharacter_Revenant::TakeDamage(float DamageAmount, FDamageEvent const& Da
 	UE_LOG(LogTemp, Warning, TEXT("Health left %f"), Health);
 	if (IsDead())
 	{
+		ARevenantGameModeBase* GameMode = GetWorld()->GetAuthGameMode<ARevenantGameModeBase>();
+		if (GameMode != nullptr)
+		{
+			GameMode->PawnKilled(this);
+		}
 		DetachFromControllerPendingDestroy();
 		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
 	}
 	return DamageToApply;
 }
@@ -77,42 +82,14 @@ void ACharacter_Revenant::AimRelease()
 }
 
 
-
 void ACharacter_Revenant::Shoot()
 {
 	Gun->PullTrigger();
-	if (isAiming)
-	{
-		if (CanShoot)
-		{
-			isShoot = true;
-			Gun->PullTrigger();
-			CanShoot = false;
-		}
-		else
-		{
-			isShoot = false;
-		}
-	}
 }
 void ACharacter_Revenant::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 }
 void ACharacter_Revenant::ShootRelease()
 {
-	isShoot = false;
-}
-void ACharacter_Revenant::CheckFireRate()
-{
-	isShoot = true;
-	FireTimer = FireTimer - 0.2f;
-	if (FireTimer <= 0)
-	{
-		//CanShoot=true;
-		ResetFireRate();
-	}
-}
-void ACharacter_Revenant::ResetFireRate()
-{
-	FireTimer = 1.2f;
+	
 }

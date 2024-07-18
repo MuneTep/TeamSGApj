@@ -65,6 +65,5 @@ private:
 	void AimRelease();
 
 	void ShootRelease();
-	void CheckFireRate();
-	void ResetFireRate();
+
 };
