@@ -31,7 +31,7 @@ protected:
 	//void AimOut();
 
 	UFUNCTION()
-	void CameraZoom(float Value);
+	void CameraZoom();
 	//void StartRun();
 	//void StopRun();
 
@@ -43,6 +43,13 @@ private:
 	float moveSpeed;
 	bool bIsZoom;
 
+	FOnTimelineFloat TimelineCallback;
+	FOnTimelineEvent SmoothZoomTimelineFinish;
+
+	UFUNCTION()
+	void SmoothZoomOnFinish(); // (4)
+
+	UPROPERTY(EditAnywhere, Category = "Timeline")
 	FTimeline ZoomTimeline;
 	UPROPERTY(EditAnywhere, Category = "Timeline")
 	UCurveFloat* ZoomCurve;

@@ -9,23 +9,44 @@
 ADefaultCharacter::ADefaultCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-}
 
+	//ZoomTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineFront"));
+	bIsZoom = false;
+
+	const ConstructorHelpers::FObjectFinder<UCurveFloat> Curve(TEXT("/Game/Input/Input_Phase/C_ZoomInOut"));
+	
+	if (Curve.Succeeded())
+	{
+		ZoomCurve = Curve.Object;
+	}
+
+	if (ZoomCurve != nullptr)
+	{
+		TimelineCallback.BindUFunction(this, FName("TimelineFloatReturn"));
+		SmoothZoomTimelineFinish.BindUFunction(this, FName("SmoothZoomOnFinish"));
+
+		ZoomTimeline.AddInterpFloat(ZoomCurve, TimelineCallback);
+		ZoomTimeline.SetTimelineFinishedFunc(SmoothZoomTimelineFinish);
+
+		float Min = 0.0f;
+		float Max = 0.25f;
+		ZoomCurve->GetTimeRange(Min, Max);
+		ZoomTimeline.SetTimelineLength(Max);
+		ZoomTimeline.SetLooping(false);
+		//ZoomTimeline.Stop();
+	}
+}
+	
 void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	ZoomTimeline.Stop();
 
-	if (ZoomCurve)
-	{
-		FOnTimelineFloat TimelineCallback;
-		TimelineCallback.BindUFunction(this, FName("TimelineFloatReturn"));
-		ZoomTimeline.AddInterpFloat(ZoomCurve, TimelineCallback);
-
-		ZoomTimeline.SetLooping(false);
-		ZoomTimeline.SetTimelineLength(2.0f); // Example: 2 seconds timeline
-
-		
-	}
+	//TimelineCallback.BindUFunction(this, FName("TimelineFloatReturn"));
+	//ZoomTimeline.AddInterpFloat(ZoomCurve, TimelineCallback);
+	//ZoomTimeline.SetLooping(false);
+	//ZoomTimeline.SetTimelineLength(2.0f); // Example: 2 seconds timeline
+	
 }
 
 void ADefaultCharacter::Tick(float DeltaTime)
@@ -33,7 +54,16 @@ void ADefaultCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	//CameraSmooth(DeltaTime);
 
-	ZoomTimeline.TickTimeline(DeltaTime);
+	if (ZoomTimeline.IsPlaying())
+	{
+		ZoomTimeline.TickTimeline(DeltaTime);
+	}
+	//else
+	//{
+	//	ZoomTimeline.GetPlaybackPosition();
+	//	//GetWorldTimerManager().ClearTimer(&ADefaultCharacter::ZoomTimeline);
+	//	SetLifeSpan(0);
+	//}
 }
 
 void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length)
@@ -61,11 +91,15 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(FName("MouseY"), this, &ADefaultCharacter::MouseY);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &ADefaultCharacter::Attack);
-	PlayerInputComponent->BindAction(FName("ZoomIn"), IE_Pressed, this, &ADefaultCharacter::ZoomIn);
-	PlayerInputComponent->BindAction(FName("ZoomOut"), IE_Pressed, this, &ADefaultCharacter::ZoomOut);
+
+	//PlayerInputComponent->BindAxis(FName("AimOn"), this, &ADefaultCharacter::CameraZoom);
+	PlayerInputComponent->BindAction(FName("AimOn"), IE_Pressed, this, &ADefaultCharacter::CameraZoom);
+
+	//PlayerInputComponent->BindAction(FName("ZoomIn"), IE_Pressed, this, &ADefaultCharacter::ZoomIn);
+	//PlayerInputComponent->BindAction(FName("ZoomOut"), IE_Pressed, this, &ADefaultCharacter::ZoomOut);
 	//PlayerInputComponent->BindAction(FName("AimOn"), IE_Pressed, this, &ADefaultCharacter::AimOn);
 	//PlayerInputComponent->BindAction(FName("AimOn"), IE_Released, this, &ADefaultCharacter::AimOut);
-	PlayerInputComponent->BindAxis(FName("AimOn"), this, &ADefaultCharacter::CameraZoom);
+	
 	//PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::StartRun);
 	//PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::StopRun);
 }
@@ -137,26 +171,24 @@ void ADefaultCharacter::ZoomOut()
 //	OriginCameraBoom->TargetArmLength = 300.0f;
 //}
 
-void ADefaultCharacter::CameraZoom(float Value)
+void ADefaultCharacter::CameraZoom()
 {
-	if (bIsZoom)
+	if (bIsZoom == true)
 	{
 		// ZoomOut (멀리)
 		bIsZoom = false;
-		ZoomTimeline.PlayFromStart();
-
-		//float NewFOV = FMath::Lerp(120.0f, 300.f, Value); // Example: Zoom from 90 to 60 degrees FOV
-		//OriginViewCamera->SetFieldOfView(NewFOV);
+		ZoomTimeline.ReverseFromEnd();
+		//UE_LOG(LogTemp, Warning, TEXT("CameraZoom TRUE"))
+		return;
 	}
 	else
 	{
 		// ZoomIn (가까이)
 		bIsZoom = true;
 
-		ZoomTimeline.PlayFromStart();
-
-		//float NewFOV = FMath::Lerp(300.f, 120.0f, Value); // Example: Zoom from 90 to 60 degrees FOV
-		//OriginViewCamera->SetFieldOfView(NewFOV);
+		ZoomTimeline.PlayFromStart(); return;
+		//UE_LOG(LogTemp, Warning, TEXT("CameraZoom FALSE"))
+		
 	}
 }
 
@@ -192,9 +224,24 @@ void ADefaultCharacter::CameraSmooth(float DeltaTime)
 
 }
 
+void ADefaultCharacter::SmoothZoomOnFinish()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("ZoomCurve End"))
+	ZoomTimeline.Stop();
+
+	if (bIsZoom == true)
+	{
+		//OriginViewCamera->SetFieldOfView(90.0f);
+	}
+	else
+	{
+		//OriginViewCamera->SetFieldOfView(70.0f);
+	}
+}
+
 void ADefaultCharacter::TimelineFloatReturn(float Value)
 {
-	float NewFOV = FMath::Lerp(300.f, 120.f, Value); // Example: Zoom from 90 to 60 degrees FOV
+	float NewFOV = FMath::Lerp(90.f, 60.f, Value); // Example: Zoom from 90 to 60 degrees FOV
 	OriginViewCamera->SetFieldOfView(NewFOV);
 }
 
