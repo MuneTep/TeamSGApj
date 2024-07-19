@@ -24,6 +24,9 @@ void UPhaseAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	Yaw = FMath::RInterpTo(ActorRotation, ControlRotation, GetWorld()->DeltaTimeSeconds, 1.0f).Yaw;
 	Pitch = FMath::RInterpTo(ActorRotation, ControlRotation, GetWorld()->DeltaTimeSeconds, 1.0f).Pitch;
 
+	
+
+	//Pawn->pitch
 
 	//Yaw = FMath::RInterpTo(, tempRotation, DeltaSeconds, 1.0f);
 	//UKismetAnimationLibrary::CalculateDirection(ActorRotation, ControlRotation);

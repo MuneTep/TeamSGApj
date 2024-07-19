@@ -34,6 +34,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bIsAttack;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bIsJump;
+
 	FRotator ActorRotation, ControlRotation, tempRotation;
 
 };

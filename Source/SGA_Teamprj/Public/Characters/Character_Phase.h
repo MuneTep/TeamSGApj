@@ -7,7 +7,7 @@
 #include "NiagaraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-
+#include "../PhaseAnimInstance.h"
 #include "Character_Phase.generated.h"
 
 UCLASS()
@@ -41,6 +41,7 @@ public:
 	void Attack();
 	void ZoomIn();
 	void ZoomOut();
+	void JumpStart();
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FCharacterHitSignature,
 		UPrimitiveComponent*, HitComponent,
@@ -69,6 +70,6 @@ protected:
 			const FHitResult& Hit
 		);
 
-	//UPhaseAnimInstance* AnimInstance;
+	UPhaseAnimInstance* AnimInstance;
 
 };

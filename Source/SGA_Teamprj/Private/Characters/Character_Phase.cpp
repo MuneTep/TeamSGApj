@@ -16,17 +16,13 @@ ACharacter_Phase::ACharacter_Phase()
 	//CapsuleComponentName
 	MyCapsuleComponent = GetCapsuleComponent();
 
-	if (MyCapsuleComponent)
-	{
-		//MyCapsuleComponent->OnComponentHit.AddDynamic(this, &AMyCharacter::HandleCharacterHit);
-		
-	}
 	
-
+	// Anim Instance
 	static ConstructorHelpers::FClassFinder<UAnimInstance> ABP_Phase(TEXT("/Game/Character_Phase/AB_Phase"));
 	if (ABP_Phase.Succeeded())
 	{
 		GetMesh()->SetAnimInstanceClass(ABP_Phase.Class);
+		AnimInstance = Cast<UPhaseAnimInstance>(GetMesh()->GetAnimInstance());
 	}
 
 	// 애니메이션 초기화
@@ -47,8 +43,6 @@ void ACharacter_Phase::Tick(float DeltaTime) {
 
 	// UpdateAnim(); 
 }
-
-
 
 void ACharacter_Phase::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length) { ADefaultCharacter::SetCamera(CameraBoom, ViewCamera, Length); }
 
@@ -119,6 +113,10 @@ void ACharacter_Phase::Attack()
 {
 	//bIsAttack = true;
 	playNiagara();
+
+	
+
+
 	Super::Attack();
 }
 
@@ -130,6 +128,12 @@ void ACharacter_Phase::ZoomIn( )
 void ACharacter_Phase::ZoomOut( )
 {
 	Super::ZoomOut();
+}
+
+void ACharacter_Phase::JumpStart()
+{
+	AnimInstance->bIsJump = true;
+	Super::JumpStart();
 }
 
 

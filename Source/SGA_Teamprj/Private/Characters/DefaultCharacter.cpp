@@ -90,7 +90,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(FName("MouseX"), this, &ADefaultCharacter::MouseX);
 	PlayerInputComponent->BindAxis(FName("MouseY"), this, &ADefaultCharacter::MouseY);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
-	PlayerInputComponent->BindAction(FName("Attack"), IE_Pressed, this, &ADefaultCharacter::Attack);
+	PlayerInputComponent->BindAction(FName("NormalAttack"), IE_Pressed, this, &ADefaultCharacter::Attack);
 
 	//PlayerInputComponent->BindAxis(FName("AimOn"), this, &ADefaultCharacter::CameraZoom);
 	PlayerInputComponent->BindAction(FName("AimOn"), IE_Pressed, this, &ADefaultCharacter::CameraZoom);
@@ -137,14 +137,40 @@ void ADefaultCharacter::MouseY(float Value)
 	AddControllerPitchInput(Value);
 }
 
-void ADefaultCharacter::Jump()
+void ADefaultCharacter::JumpStart()
 {
 	Super::Jump();
 }
 
-void ADefaultCharacter::Attack()
+void ADefaultCharacter::JumpEnd()
 {
 
+}
+
+void ADefaultCharacter::Attack()
+{
+	// RayCast
+	FVector Start = GetActorLocation(); // 레이캐스트의 시작 지점
+	FVector ForwardVector = GetActorForwardVector(); // 캐릭터의 앞 방향 벡터
+	FVector End = Start + (ForwardVector * 1000.0f); // 레이캐스트의 끝 지점 (1000.0f는 거리)
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자신을 무시하도록 설정 (옵션)
+
+	// 레이캐스트 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
+	}
 }
 
 void ADefaultCharacter::ZoomIn()

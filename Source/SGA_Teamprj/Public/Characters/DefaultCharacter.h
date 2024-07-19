@@ -22,7 +22,8 @@ protected:
 	void MoveRight(float Value);
 	void MouseX(float Value);
 	void MouseY(float Value);
-	void Jump();
+	void JumpStart();
+	void JumpEnd();
 	void Attack();
 	void ZoomIn();
 	void ZoomOut();
