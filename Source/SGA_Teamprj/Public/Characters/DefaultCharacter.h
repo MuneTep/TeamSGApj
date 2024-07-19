@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -15,6 +15,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+
 	virtual void BeginPlay() override;
 	virtual void SetCamera();
 	void MoveForward(float Value);
@@ -23,8 +24,10 @@ protected:
 	void CameraY(float Value);
 	void SprintStart();
 	void SprintEnd();
+	// ÁÜ ÇÔ¼ö Ãß°¡
+	void CameraZoom(float Value);
 
-protected:		
+protected:
 	float SprintMult;
 	float BaseSpeed;
 	virtual void Attack1();
