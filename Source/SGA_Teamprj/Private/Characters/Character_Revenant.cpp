@@ -15,13 +15,14 @@ ACharacter_Revenant::ACharacter_Revenant()
 
 void ACharacter_Revenant::BeginPlay() {
 	Super::BeginPlay();
-
+	//isShoot = true;
+	FireTimer = 0;
 	Health = MaxHealth;
 	MyAnim = Cast<UAnimInstance>(GetMesh()->GetAnimInstance());
 	check(nullptr != MyAnim);
 	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
 
-	//GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
+	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
 	//°Ç Àû¿ä
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
@@ -70,26 +71,54 @@ bool ACharacter_Revenant::IsDead() const
 	return Health <= 0;
 }
 
+bool ACharacter_Revenant::IsShoot() const
+{
+	return CanShoot;
+}
+
+void ACharacter_Revenant::AIShoot()
+{
+	Gun->PullTrigger();
+}
+
 
 void ACharacter_Revenant::Aim()
 {
-	isAiming = true;
+	isShoot = false;
 }
 
 void ACharacter_Revenant::AimRelease()
 {
-	isAiming = false;
+
+}
+
+void ACharacter_Revenant::CheckFireRate()
+{
+	FireTimer = FireTimer - 0.2f;
+	if (FireTimer <= 0)
+	{
+		ResetFireRate();
+		CanShoot = true;
+	}
 }
 
 
 void ACharacter_Revenant::Shoot()
 {
-	Gun->PullTrigger();
+	if (CanShoot) {
+		Gun->PullTrigger();
+		CanShoot = false;
+	}
 }
 void ACharacter_Revenant::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
 }
 void ACharacter_Revenant::ShootRelease()
 {
-	
+	//CanShoot = true;
+}
+
+void ACharacter_Revenant::ResetFireRate()
+{
+	FireTimer = 1.2f;
 }
