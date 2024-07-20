@@ -18,17 +18,5 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
-
-	
-private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* Kallari_CameraBoom;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Kallari_ViewCamera;
-
-private:
-
-	float Length;
 
 };

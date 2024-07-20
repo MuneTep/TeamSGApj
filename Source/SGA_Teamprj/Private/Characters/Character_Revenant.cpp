@@ -10,7 +10,6 @@ ACharacter_Revenant::ACharacter_Revenant()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetCamera();
 }
 
 void ACharacter_Revenant::BeginPlay() {
@@ -24,7 +23,7 @@ void ACharacter_Revenant::BeginPlay() {
 
 	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
-	//°Ç Àû¿ä
+	//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	Gun = GetWorld()->SpawnActor<AGun>(GunClass);
 	GetMesh()->HideBoneByName(TEXT("weapon_l"), EPhysBodyOp::PBO_None);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("hand_lSocket"));
@@ -35,7 +34,7 @@ void ACharacter_Revenant::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void ACharacter_Revenant::SetCamera() { Super::SetCamera(); }
+
 void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

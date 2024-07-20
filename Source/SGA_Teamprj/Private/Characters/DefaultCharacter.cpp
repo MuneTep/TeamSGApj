@@ -15,6 +15,7 @@ ADefaultCharacter::ADefaultCharacter() : BaseSpeed(600.f), SprintMult(1.8f)
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 720.f;
 
+	SetCamera();
 }
 
 void ADefaultCharacter::BeginPlay()
@@ -51,7 +52,6 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	FInputAxisKeyMapping KeyA = FInputAxisKeyMapping(FName("MoveRight"), EKeys::A, -1.f);
 	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("CameraX"), EKeys::MouseX, 1.f);
 	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("CameraY"), EKeys::MouseY, -1.f);
-	// ?? ¢¬¢Ò¢¯?¨ö¨¬ ?? ?©¬¡Æ¢®
 	FInputAxisKeyMapping KeyMouseWheel = FInputAxisKeyMapping(FName("CameraZoom"), EKeys::MouseWheelAxis, -1.f);
 	FInputActionKeyMapping KeySpacebar(FName("Jump"), EKeys::SpaceBar);
 	FInputActionKeyMapping KeyShift(FName("Run"), EKeys::LeftShift);
@@ -62,7 +62,6 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyA);
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseX);
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseY);
-	// ?? ¢¬¢Ò¢¯?¨ö¨¬ ?? ?©¬¡Æ¢®
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseWheel);
 	UPlayerInput::AddEngineDefinedActionMapping(KeySpacebar);
 	UPlayerInput::AddEngineDefinedActionMapping(KeyShift);
@@ -71,7 +70,6 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ADefaultCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(FName("CameraX"), this, &ADefaultCharacter::CameraX);
 	PlayerInputComponent->BindAxis(FName("CameraY"), this, &ADefaultCharacter::CameraY);
-	// ?? ¢¬¢Ò¢¯?¨ö¨¬ ?? ?©¬¡Æ¢®
 	PlayerInputComponent->BindAxis(FName("CameraZoom"), this, &ADefaultCharacter::CameraZoom);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::SprintStart);
@@ -123,7 +121,7 @@ void ADefaultCharacter::SprintEnd()
 	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
 }
 
-// ?? ??¨ù? ?©¬¡Æ¢®
+// ?? ??ï¿½ï¿½? ?ï¿½ï¿½ï¿½Æ¢ï¿½
 void ADefaultCharacter::CameraZoom(float Value)
 {
 	if (CameraBoom)

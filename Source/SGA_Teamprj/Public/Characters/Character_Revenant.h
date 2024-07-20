@@ -15,38 +15,32 @@ public:
 	ACharacter_Revenant();
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	//Ä³¸¯ÅÍ °ø°Ý 
+	//Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ 
 	UFUNCTION(BlueprintPure)
 	bool IsShoot() const;
 	void AIShoot();
 	void Shoot();
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor *DamageCauser) override;
-	//Ä³¸¯ÅÍ Á×À½
+	//Ä³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	UFUNCTION(BlueprintPure)
 	bool IsDead() const;
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	USpringArmComponent* Revenant_CameraBoom;
-	UPROPERTY(EditDefaultsOnly)
-	UCameraComponent* Revenant_ViewCamera;
-
-	//Ã¼·Â
+	//Ã¼ï¿½ï¿½
 	UPROPERTY(EditDefaultsOnly)
 	float MaxHealth = 100;
 	UPROPERTY(VisibleAnywhere)
 	float Health;
 
-	//¸ùÅ¸ÁÖ ÇÔ¼ö
+	//ï¿½ï¿½Å¸ï¿½ï¿½ ï¿½Ô¼ï¿½
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
 	class UAnimInstance* MyAnim;
 
-	//ÃÑ µô·¹ÀÌ Å¸ÀÌ¸Ó
+	//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½Ì¸ï¿½
 	float FireTimer;
 	FTimerHandle Handle;
 
@@ -55,7 +49,7 @@ private:
 	UPROPERTY()
 	AGun* Gun;
 
-	//ÃÑ ³»ºÎ ÇÔ¼ö
+	//ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
 	bool isShoot;
 	bool CanShoot;
 
