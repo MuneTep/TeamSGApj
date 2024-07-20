@@ -42,4 +42,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float Damage = 10;
+
+	UPROPERTY(EditAnywhere)
+	FName BoneName;
 };

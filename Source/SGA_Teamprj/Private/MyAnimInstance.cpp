@@ -3,3 +3,6 @@
 
 #include "MyAnimInstance.h"
 
+void UMyAnimInstance::AnimNotify_AttackHitCheck()
+{
+}
