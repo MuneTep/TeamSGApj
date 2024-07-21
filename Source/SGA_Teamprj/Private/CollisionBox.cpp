@@ -27,12 +27,12 @@ void ACollisionBox::BeginPlay()
 
 void ACollisionBox::CollisionBoxOn(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Blue, TEXT("충돌!"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Blue, TEXT("충돌!"));
 }
 
 void ACollisionBox::CollisionBoxOff(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	GEngine->AddOnScreenDebugMessage(1, 30.f, FColor::Red, TEXT("충돌 해제"));
+	GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("충돌 해제"));
 }
 
 // Called every frame
