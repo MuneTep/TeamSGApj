@@ -70,6 +70,23 @@ bool ACharacter_Revenant::IsDead() const
 	return Health <= 0;
 }
 
+float ACharacter_Revenant::GetHealth()
+{
+	return Health;
+}
+
+void ACharacter_Revenant::AddHealth(float value)
+{
+	if (Health + value > 100.f)
+	{
+		Health = 100.f;
+	}
+	else
+	{
+		Health += value;
+	}
+}
+
 bool ACharacter_Revenant::IsShoot() const
 {
 	return CanShoot;
