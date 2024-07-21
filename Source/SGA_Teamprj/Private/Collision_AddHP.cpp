@@ -5,6 +5,11 @@
 #include "Characters/Character_Revenant.h"
 #include "Kismet/GameplayStatics.h"
 
+void ACollision_AddHP::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
 void ACollision_AddHP::CollisionBoxOn(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ACharacter_Revenant* myCharacter = Cast<ACharacter_Revenant>(UGameplayStatics::GetPlayerPawn(this, 0));
