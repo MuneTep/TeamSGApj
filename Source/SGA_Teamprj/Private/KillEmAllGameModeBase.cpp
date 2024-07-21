@@ -3,6 +3,7 @@
 
 #include "KillEmAllGameModeBase.h"
 
+
 void AKillEmAllGameModeBase::PawnKilled(APawn* PawnKilled)
 {
 	Super::PawnKilled(PawnKilled);

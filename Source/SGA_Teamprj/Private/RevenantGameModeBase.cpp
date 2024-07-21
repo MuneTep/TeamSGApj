@@ -2,15 +2,16 @@
 
 
 #include "RevenantGameModeBase.h"
+#include "UObject/ConstructorHelpers.h"
 
 ARevenantGameModeBase::ARevenantGameModeBase()
 {
-	static ConstructorHelpers::FClassFinder<AActor> CharacterBPClassFinder(TEXT("/Script/Engine.Blueprint'/Game/BP_SJW_Revenant/C_Revenant/BP_Character_Revenant.BP_Character_Revenant'"));
+	static ConstructorHelpers::FClassFinder<AActor>CharacterBPClassFinder(TEXT("/Script/Engine.Blueprint'/Game/BP_SJW_Revenant/C_Revenant/BP_Character_Revenant.BP_Character_Revenant'"));
 	if (CharacterBPClassFinder.Succeeded())
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Cyan, TEXT("ARevenantGameModeBase + ActorBPClassFinder.Succeeded() = Success"));
 		CharacterBPClass = CharacterBPClassFinder.Class;
-		characterSpawner(CharacterBPClass, myLocation, myRotation);
+		characterSpawner(CharacterBPClass, FVector(-1500.f, 1200.f, 80.f), FRotator(0.f, 0.f, 0.f));
 	}
 	else
 	{
@@ -19,11 +20,6 @@ ARevenantGameModeBase::ARevenantGameModeBase()
 			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, TEXT("ARevenantGameModeBase + ActorBPClassFinder.Succeeded() = Fail"));
 		}
 	}
-}
-
-void ARevenantGameModeBase::BeginPlay()
-{
-	Super::BeginPlay();
 }
 
 void ARevenantGameModeBase::characterSpawner(TSubclassOf<AActor> SpawnActor, FVector Location, FRotator Rotation)
@@ -37,7 +33,7 @@ void ARevenantGameModeBase::characterSpawner(TSubclassOf<AActor> SpawnActor, FVe
 			SpawnParams.Owner = this;
 			SpawnParams.Instigator = GetInstigator();
 
-			AActor* SpwanedActor = World->SpawnActor<AActor>(SpawnActor, Location, Rotation, SpawnParams);
+			AActor* SpwanedActor = World->SpawnActor<APawn>(SpawnActor, Location, Rotation, SpawnParams);
 		}
 	}
 }

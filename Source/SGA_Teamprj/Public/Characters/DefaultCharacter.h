@@ -26,6 +26,8 @@ protected:
 	void SprintEnd();
 	void CameraZoom(float Value);
 
+	
+
 protected:
 	float SprintMult;
 	float BaseSpeed;

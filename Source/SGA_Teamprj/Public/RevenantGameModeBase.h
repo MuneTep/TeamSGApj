@@ -18,15 +18,8 @@ class SGA_TEAMPRJ_API ARevenantGameModeBase : public AGameModeBase
 public:
 	UPROPERTY()
 	TSubclassOf<AActor> CharacterBPClass;
-	UPROPERTY()
-	FVector myLocation = FVector(-1000.f, 1500.f, 80.f);
-	UPROPERTY()
-	FRotator myRotation = FRotator(0.f, 0.f, 0.f);
 
 	ARevenantGameModeBase();
-
-	virtual void BeginPlay() override;
-
 	void characterSpawner(TSubclassOf<AActor> SpawnActor, FVector Location, FRotator Rotation);
 	virtual void PawnKilled(APawn* PawnKilled);
 };

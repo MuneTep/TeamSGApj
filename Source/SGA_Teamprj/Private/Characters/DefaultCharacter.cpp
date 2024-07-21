@@ -8,7 +8,6 @@ ADefaultCharacter::ADefaultCharacter() : BaseSpeed(600.f), SprintMult(1.8f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
