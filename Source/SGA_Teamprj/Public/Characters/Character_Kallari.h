@@ -4,9 +4,7 @@
 #include "Characters/DefaultCharacter.h"
 #include "Character_Kallari.generated.h"
 
-
 UCLASS()
-
 class SGA_TEAMPRJ_API ACharacter_Kallari : public ADefaultCharacter
 {
 	GENERATED_BODY()
@@ -18,17 +16,4 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
-
-	
-private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* Kallari_CameraBoom;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Kallari_ViewCamera;
-
-private:
-
-	float Length;
-
 };

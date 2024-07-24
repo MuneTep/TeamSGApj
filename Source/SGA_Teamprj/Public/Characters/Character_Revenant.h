@@ -27,13 +27,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
-
+	virtual void PostInitializeComponents() override;
 private:
-	UPROPERTY(EditDefaultsOnly)
-	USpringArmComponent* Revenant_CameraBoom;
-	UPROPERTY(EditDefaultsOnly)
-	UCameraComponent* Revenant_ViewCamera;
 
 	//Ã¼·Â
 	UPROPERTY(EditDefaultsOnly)
@@ -41,10 +36,28 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float Health;
 
+	//ÄÞº¸ ¾îÅÃ
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool CanNextCombo;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsComboInputOn;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 CurrentCombo;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 MaxCombo;
+	void Attack();
+	bool IsAttacking;
 	//¸ùÅ¸ÁÖ ÇÔ¼ö
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
-	class UAnimInstance* MyAnim;
+
+	void AttackStartComboState();
+	void AttackEndComboState();
+	UPROPERTY()
+	class UMyAnimInstance* MyAnim;
 
 	//ÃÑ µô·¹ÀÌ Å¸ÀÌ¸Ó
 	float FireTimer;

@@ -16,11 +16,21 @@ UCLASS()
 class SGA_TEAMPRJ_API UMyAnimInstance : public UAnimInstance
 {
 	GENERATED_BODY()
-
+public:
+	UMyAnimInstance();
+	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
+	
 private:
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true));
+	UAnimMontage* AttackMontage;
 	UFUNCTION()
 	void AnimNotify_AttackHitCheck();
+	UFUNCTION()
+	void AnimNotify_NextAttackCheck();
+	FName GetAttackMontageSectionName(int32 Section);
 public:
+	void PlayAttackMontage();
+	void JumpToAttackMontageSection(int32 NewSection);
 	FOnNextAttackCheckDelegate OnNextAttackCheck;
 	FOnAttackHitCheckDelegate OnAttackHitCheck;
 	

@@ -5,12 +5,14 @@
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
 #include "RevenantGameModeBase.h"
+#include "MyAnimInstance.h"
 
 ACharacter_Revenant::ACharacter_Revenant()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	SetCamera();
+	IsAttacking = false;
+	MaxCombo = 4;
+	AttackEndComboState();
 }
 
 void ACharacter_Revenant::BeginPlay() {
@@ -18,10 +20,12 @@ void ACharacter_Revenant::BeginPlay() {
 	//isShoot = true;
 	FireTimer = 0;
 	Health = MaxHealth;
-	MyAnim = Cast<UAnimInstance>(GetMesh()->GetAnimInstance());
-	check(nullptr != MyAnim);
-	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
-
+	//블루프린트 델리게이트와 c++ 델리게이트가 다른데 c++ 에서선언 한 딜리게이트를 
+	// 블루프린트 에서 사용하기 위해 adddynamic을 해준다 이걸 다이나믹 델리게이트 라고 칭함
+	// 델리게이트는 일반적인 다른 클래스 함수를 호출하여 리턴값을 받아오는게 아닌 
+	// 순수한 리턴값만 가져오게 하는 방식
+	MaxCombo = 3; 
+	AttackEndComboState();
 	GetWorldTimerManager().SetTimer(Handle, this, &ACharacter_Revenant::CheckFireRate, 0.2f, true);
 
 	//건 적요
@@ -30,12 +34,25 @@ void ACharacter_Revenant::BeginPlay() {
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, TEXT("hand_lSocket"));
 	Gun->SetOwner(this);
 }
+void ACharacter_Revenant::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
+	MyAnim->OnNextAttackCheck.AddLambda([this]()->void {
+		UE_LOG(LogTemp, Warning, TEXT("OnNextAttackCheck"));
+		CanNextCombo = false;
+		if (IsComboInputOn)
+		{
+			AttackStartComboState();
+			MyAnim->JumpToAttackMontageSection(CurrentCombo);
+		}
+		});
+}
 void ACharacter_Revenant::Tick(float DeltaTime)
 { 
 	Super::Tick(DeltaTime);
 
 }
-void ACharacter_Revenant::SetCamera() { Super::SetCamera(); }
 void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -105,13 +122,48 @@ void ACharacter_Revenant::CheckFireRate()
 
 void ACharacter_Revenant::Shoot()
 {
+	Attack();
 	if (CanShoot) {
 		Gun->PullTrigger();
 		CanShoot = false;
 	}
 }
+void ACharacter_Revenant::Attack()
+{
+	if (IsAttacking) {
+		check(FMath::IsWithinInclusive<int32>(CurrentCombo, 1, MaxCombo));
+		if (CanNextCombo) {
+			IsComboInputOn = true;
+		}
+	}
+	else {
+		check(CurrentCombo == 0);
+		AttackStartComboState();
+		MyAnim->PlayAttackMontage();
+		MyAnim->JumpToAttackMontageSection(CurrentCombo);
+		IsAttacking = true;
+	}
+}
 void ACharacter_Revenant::OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted)
 {
+	check(IsAttacking);
+	check(CurrentCombo > 0);
+	IsAttacking = false;
+	AttackEndComboState();
+
+}
+void ACharacter_Revenant::AttackStartComboState()
+{
+	CanNextCombo = true;
+	IsComboInputOn = false;
+	check(FMath::IsWithinInclusive<int32>(CurrentCombo, 0, MaxCombo - 1));
+	CurrentCombo = FMath::Clamp<int32>(CurrentCombo + 1, 1, MaxCombo);
+}
+void ACharacter_Revenant::AttackEndComboState()
+{
+	IsComboInputOn = false;
+	CanNextCombo = false;
+	CurrentCombo = 0;
 }
 void ACharacter_Revenant::ShootRelease()
 {
