@@ -22,13 +22,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length) override;
 
 private:
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* Phase_CameraBoom;
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* Phase_ViewCamera;
 
 	void playNiagara();
 	bool bIsAttack;
@@ -69,7 +64,11 @@ protected:
 			FVector NormalImpulse,
 			const FHitResult& Hit
 		);
+	
 
+	// CharacterAnimInstance
 	UPhaseAnimInstance* AnimInstance;
-
+	// Particle Fx
+	UNiagaraSystem* EnergyShockSystem;
+	UParticleSystem* HitPrimarySparkleSystem;
 };

@@ -9,14 +9,11 @@
 ACharacter_Phase::ACharacter_Phase()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
-	SetCamera(Phase_CameraBoom, Phase_ViewCamera, 300.f);
 	setSpeed(100.f);
 
 	//CapsuleComponentName
 	MyCapsuleComponent = GetCapsuleComponent();
 
-	
 	// Anim Instance
 	static ConstructorHelpers::FClassFinder<UAnimInstance> ABP_Phase(TEXT("/Game/Character_Phase/AB_Phase"));
 	if (ABP_Phase.Succeeded())
@@ -25,12 +22,9 @@ ACharacter_Phase::ACharacter_Phase()
 		AnimInstance = Cast<UPhaseAnimInstance>(GetMesh()->GetAnimInstance());
 	}
 
-	// 애니메이션 초기화
-	//static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_Idle(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Idle"));
-	//static ConstructorHelpers::FObjectFinder<UAnimSequence> anim_JogFwd(TEXT("/Game/ParagonPhase/Characters/Heroes/Phase/Animations/Jog_Fwd"));
-	//Anim_Idle = anim_Idle.Object;
-	//Anim_JogFwd = anim_JogFwd.Object;
-	//Anim = Anim_Idle;
+	// Particle
+	EnergyShockSystem = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Game/ParagonPhase/FX/Particles/Abilities/Flash/FX/P_PhaseFlash"));
+	HitPrimarySparkleSystem = LoadObject<UParticleSystem>(nullptr, TEXT("/Game/ParagonPhase/FX/Particles/Abilities/Primary/FX/P_PhasePrimaryHitWorld"));
 }
 
 void ACharacter_Phase::BeginPlay() 
@@ -40,47 +34,20 @@ void ACharacter_Phase::BeginPlay()
 
 void ACharacter_Phase::Tick(float DeltaTime) { 
 	Super::Tick(DeltaTime); 
-
-	// UpdateAnim(); 
 }
 
-void ACharacter_Phase::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length) { ADefaultCharacter::SetCamera(CameraBoom, ViewCamera, Length); }
-
-// 선택된 애니메이션 플레이, Sequence버전 레거시 코드
-//void ACharacter_Phase::PlayAnim()
-//{
-//	bool bLoop = true;
-//	GetMesh()->PlayAnimation(Anim, bLoop);
-//}
-//
-//void ACharacter_Phase::UpdateAnim()
-//{
-//	FVector velocity = GetVelocity();
-//
-//	if (!velocity.IsZero())
-//	{
-//		//Anim = Anim_JogFwd;
-//	}
-//	else
-//	{
-//		//Anim = Anim_Idle;
-//	}
-//
-//	//if(Anim.is)
-//	//PlayAnim();
-//}
 
 
 void ACharacter_Phase::playNiagara()
 {
 	USkeletalMeshComponent* skeletalMeshComponent = this->GetMesh();
-	UNiagaraSystem* sparkleSystem = LoadObject<UNiagaraSystem>(nullptr, TEXT("/Game/ParagonPhase/FX/Particles/Abilities/Flash/FX/P_PhaseFlash"));
+	
 
-	if(skeletalMeshComponent && sparkleSystem)
+	if(skeletalMeshComponent && EnergyShockSystem)
 	{
 		FTransform SocketTransform = skeletalMeshComponent->GetSocketTransform(TEXT("Toe_L"));
 
-		UNiagaraFunctionLibrary::SpawnSystemAttached(sparkleSystem,
+		UNiagaraFunctionLibrary::SpawnSystemAttached(EnergyShockSystem,
 			skeletalMeshComponent, L"Toe_L", SocketTransform.GetLocation(), SocketTransform.Rotator(),FVector(1.0f), EAttachLocation::KeepRelativeOffset,true,
 			ENCPoolMethod::None, false, true);
 	}
@@ -113,10 +80,6 @@ void ACharacter_Phase::Attack()
 {
 	//bIsAttack = true;
 	playNiagara();
-
-	
-
-
 	Super::Attack();
 }
 

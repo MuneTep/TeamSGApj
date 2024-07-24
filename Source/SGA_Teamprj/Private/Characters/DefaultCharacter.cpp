@@ -10,8 +10,14 @@ ADefaultCharacter::ADefaultCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	//ZoomTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("TimelineFront"));
 	bIsZoom = false;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+
+	
+	//GetCharacterMovement()->bOrientRotationToMovement = true;
+	//GetCharacterMovement()->RotationRate.Yaw = 720.f;
 
 	const ConstructorHelpers::FObjectFinder<UCurveFloat> Curve(TEXT("/Game/Input/Input_Phase/C_ZoomInOut"));
 	
@@ -33,7 +39,6 @@ ADefaultCharacter::ADefaultCharacter()
 		ZoomCurve->GetTimeRange(Min, Max);
 		ZoomTimeline.SetTimelineLength(Max);
 		ZoomTimeline.SetLooping(false);
-		//ZoomTimeline.Stop();
 	}
 }
 	
@@ -41,49 +46,56 @@ void ADefaultCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	ZoomTimeline.Stop();
-
-	//TimelineCallback.BindUFunction(this, FName("TimelineFloatReturn"));
-	//ZoomTimeline.AddInterpFloat(ZoomCurve, TimelineCallback);
-	//ZoomTimeline.SetLooping(false);
-	//ZoomTimeline.SetTimelineLength(2.0f); // Example: 2 seconds timeline
 	
 }
 
 void ADefaultCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	//CameraSmooth(DeltaTime);
 
 	if (ZoomTimeline.IsPlaying())
 	{
 		ZoomTimeline.TickTimeline(DeltaTime);
 	}
-	//else
-	//{
-	//	ZoomTimeline.GetPlaybackPosition();
-	//	//GetWorldTimerManager().ClearTimer(&ADefaultCharacter::ZoomTimeline);
-	//	SetLifeSpan(0);
-	//}
+
 }
 
-void ADefaultCharacter::SetCamera(USpringArmComponent* CameraBoom, UCameraComponent* ViewCamera, float Length)
+void ADefaultCharacter::SetCamera()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->TargetArmLength = Length;
+	CameraBoom->TargetArmLength = 300.0f;
 	CameraBoom->bUsePawnControlRotation = true;
 
-	OriginCameraBoom = CameraBoom;
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	ViewCamera->bUsePawnControlRotation = false;
-	OriginViewCamera = ViewCamera;
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	FInputAxisKeyMapping KeyW = FInputAxisKeyMapping(FName("MoveForward"), EKeys::W, 1.f);
+	FInputAxisKeyMapping KeyS = FInputAxisKeyMapping(FName("MoveForward"), EKeys::S, -1.f);
+	FInputAxisKeyMapping KeyD = FInputAxisKeyMapping(FName("MoveRight"), EKeys::D, 1.f);
+	FInputAxisKeyMapping KeyA = FInputAxisKeyMapping(FName("MoveRight"), EKeys::A, -1.f);
+	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("CameraX"), EKeys::MouseX, 1.f);
+	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("CameraY"), EKeys::MouseY, -1.f);
+	FInputAxisKeyMapping KeyMouseWheel = FInputAxisKeyMapping(FName("CameraZoom"), EKeys::MouseWheelAxis, -1.f);
+	FInputActionKeyMapping KeySpacebar(FName("Jump"), EKeys::SpaceBar);
+	FInputActionKeyMapping KeyShift(FName("Run"), EKeys::LeftShift);
+
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyW);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyS);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyD);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyA);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseX);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseY);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseWheel);
+	UPlayerInput::AddEngineDefinedActionMapping(KeySpacebar);
+	UPlayerInput::AddEngineDefinedActionMapping(KeyShift);
 
 	PlayerInputComponent->BindAxis(FName("MoveForward"), this, &ADefaultCharacter::MoveForward);
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ADefaultCharacter::MoveRight);
@@ -92,16 +104,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("NormalAttack"), IE_Pressed, this, &ADefaultCharacter::Attack);
 
-	//PlayerInputComponent->BindAxis(FName("AimOn"), this, &ADefaultCharacter::CameraZoom);
 	PlayerInputComponent->BindAction(FName("AimOn"), IE_Pressed, this, &ADefaultCharacter::CameraZoom);
-
-	//PlayerInputComponent->BindAction(FName("ZoomIn"), IE_Pressed, this, &ADefaultCharacter::ZoomIn);
-	//PlayerInputComponent->BindAction(FName("ZoomOut"), IE_Pressed, this, &ADefaultCharacter::ZoomOut);
-	//PlayerInputComponent->BindAction(FName("AimOn"), IE_Pressed, this, &ADefaultCharacter::AimOn);
-	//PlayerInputComponent->BindAction(FName("AimOn"), IE_Released, this, &ADefaultCharacter::AimOut);
-	
-	//PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::StartRun);
-	//PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::StopRun);
 }
 
 void ADefaultCharacter::MoveForward(float Value)
@@ -175,26 +178,26 @@ void ADefaultCharacter::Attack()
 
 void ADefaultCharacter::ZoomIn()
 {
-	float currentCameraBoom = OriginCameraBoom->TargetArmLength;
-	OriginCameraBoom->TargetArmLength = FMath::Clamp(currentCameraBoom + 50.0f, 50, 300);
+	float currentCameraBoom = CameraBoom->TargetArmLength;
+	CameraBoom->TargetArmLength = FMath::Clamp(currentCameraBoom + 50.0f, 50, 300);
 }
 
 void ADefaultCharacter::ZoomOut()
 {
-	float currentCameraBoom = OriginCameraBoom->TargetArmLength;
-	OriginCameraBoom->TargetArmLength = FMath::Clamp(currentCameraBoom - 50.0f, 50, 300);
+	float currentCameraBoom = CameraBoom->TargetArmLength;
+	CameraBoom->TargetArmLength = FMath::Clamp(currentCameraBoom - 50.0f, 50, 300);
 
 	//UE_LOG(LogTemp, Warning, TEXT("CameraSmooth %d"), currentCameraBoom)
 }
 
 //void ADefaultCharacter::AimOn()
 //{
-//	OriginCameraBoom->TargetArmLength = 200.0f;
+//	CameraBoom->TargetArmLength = 200.0f;
 //}
 //
 //void ADefaultCharacter::AimOut()
 //{
-//	OriginCameraBoom->TargetArmLength = 300.0f;
+//	CameraBoom->TargetArmLength = 300.0f;
 //}
 
 void ADefaultCharacter::CameraZoom()
@@ -225,55 +228,45 @@ void ADefaultCharacter::CameraSmooth(float DeltaTime)
 	float MaxCameraArmLength = 400.0f;
 	float CameraArmLength = MaxCameraArmLength;
 
-	if (OriginCameraBoom != nullptr)
+	if (CameraBoom != nullptr)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("CameraSmooth"))
 
-		FVector Start = OriginCameraBoom->GetComponentLocation();
-		FVector End = UKismetMathLibrary::GetDirectionUnitVector(Start, OriginViewCamera->GetComponentLocation()) * MaxCameraArmLength + Start;
+		FVector Start = CameraBoom->GetComponentLocation();
+		FVector End = UKismetMathLibrary::GetDirectionUnitVector(Start, ViewCamera->GetComponentLocation()) * MaxCameraArmLength + Start;
 		TArray<AActor*> ToIgnore;
 		FHitResult OutCameraHit;
 		bool IsCameraHit = UKismetSystemLibrary::SphereTraceSingle(
 			GetWorld(), Start, End,
-			OriginCameraBoom->ProbeSize,
+			CameraBoom->ProbeSize,
 			ETraceTypeQuery::TraceTypeQuery1, true,
 			ToIgnore,
 			EDrawDebugTrace::None, OutCameraHit, true);
 
 		if (IsCameraHit)
 		{
-			CameraArmLength = UKismetMathLibrary::Clamp(OutCameraHit.Distance - OriginCameraBoom->ProbeSize, 30, MaxCameraArmLength);
+			CameraArmLength = UKismetMathLibrary::Clamp(OutCameraHit.Distance - CameraBoom->ProbeSize, 30, MaxCameraArmLength);
 		}
 
-		OriginCameraBoom->TargetArmLength = UKismetMathLibrary::FInterpTo(OriginCameraBoom->TargetArmLength, CameraArmLength, DeltaTime, 10);
+		CameraBoom->TargetArmLength = UKismetMathLibrary::FInterpTo(CameraBoom->TargetArmLength, CameraArmLength, DeltaTime, 10);
 	}
 
 }
 
 void ADefaultCharacter::SmoothZoomOnFinish()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("ZoomCurve End"))
 	ZoomTimeline.Stop();
-
-	if (bIsZoom == true)
-	{
-		//OriginViewCamera->SetFieldOfView(90.0f);
-	}
-	else
-	{
-		//OriginViewCamera->SetFieldOfView(70.0f);
-	}
 }
 
 void ADefaultCharacter::TimelineFloatReturn(float Value)
 {
 	float NewFOV = FMath::Lerp(90.f, 60.f, Value); // Example: Zoom from 90 to 60 degrees FOV
-	OriginViewCamera->SetFieldOfView(NewFOV);
+	ViewCamera->SetFieldOfView(NewFOV);
 }
 
 void ADefaultCharacter::setAtk(float _atk){	attack = _atk;}
 void ADefaultCharacter::setHP(float _hp){hp = _hp;}
-void ADefaultCharacter::setSpeed(float _sp){moveSpeed = _sp;}
+void ADefaultCharacter::setSpeed(float _sp){ BaseSpeed = _sp;}
 float ADefaultCharacter::getAtk(){return attack;}
 float ADefaultCharacter::getHP(){return hp;}
-float ADefaultCharacter::getSpeed(){return moveSpeed;}
+float ADefaultCharacter::getSpeed(){return BaseSpeed;}

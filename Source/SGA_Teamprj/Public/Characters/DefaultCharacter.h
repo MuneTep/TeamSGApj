@@ -2,6 +2,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/SpringArmComponent.h"
+#include "Camera/CameraComponent.h"
 #include "Components/TimelineComponent.h"
 #include "DefaultCharacter.generated.h"
 
@@ -17,7 +19,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera(class USpringArmComponent* CameraBoom, class UCameraComponent* ViewCamera, float Length);
+	void SetCamera();
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void MouseX(float Value);
@@ -28,41 +30,40 @@ protected:
 	void ZoomIn();
 	void ZoomOut();
 
-	//void AimOn();
-	//void AimOut();
-
 	UFUNCTION()
 	void CameraZoom();
 	//void StartRun();
 	//void StopRun();
-
 	void CameraSmooth(float DeltaTime);
 	// 공통된 변수 private
 private:
 	float attack;
 	float hp;
-	float moveSpeed;
 	bool bIsZoom;
+
+	float SprintMult;
+	float BaseSpeed;
 
 	FOnTimelineFloat TimelineCallback;
 	FOnTimelineEvent SmoothZoomTimelineFinish;
 
 	UFUNCTION()
-	void SmoothZoomOnFinish(); // (4)
+	void SmoothZoomOnFinish(); // Curve가 끝났을 때
+	
+	UFUNCTION()
+	void TimelineFloatReturn(float Value);
 
 	UPROPERTY(EditAnywhere, Category = "Timeline")
 	FTimeline ZoomTimeline;
 	UPROPERTY(EditAnywhere, Category = "Timeline")
 	UCurveFloat* ZoomCurve;
 
-
+	// Camera Components
 	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* OriginCameraBoom;
+	USpringArmComponent* CameraBoom;
 	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* OriginViewCamera;
+	UCameraComponent* ViewCamera;
 
-	UFUNCTION()
-	void TimelineFloatReturn(float Value);
 
 	// getter, setter
 public:
