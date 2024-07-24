@@ -13,6 +13,8 @@ ADefaultCharacter::ADefaultCharacter() : BaseSpeed(600.f), SprintMult(1.8f)
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate.Yaw = 720.f;
+
+	SetCamera();
 }
 
 void ADefaultCharacter::BeginPlay()
@@ -34,6 +36,7 @@ void ADefaultCharacter::SetCamera()
 
 	ViewCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("ViewCamera"));
 	ViewCamera->SetupAttachment(CameraBoom);
+	ViewCamera->bUsePawnControlRotation = false;
 }
 
 void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -46,6 +49,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	FInputAxisKeyMapping KeyA = FInputAxisKeyMapping(FName("MoveRight"), EKeys::A, -1.f);
 	FInputAxisKeyMapping KeyMouseX = FInputAxisKeyMapping(FName("CameraX"), EKeys::MouseX, 1.f);
 	FInputAxisKeyMapping KeyMouseY = FInputAxisKeyMapping(FName("CameraY"), EKeys::MouseY, -1.f);
+	FInputAxisKeyMapping KeyMouseWheel = FInputAxisKeyMapping(FName("CameraZoom"), EKeys::MouseWheelAxis, -1.f);
 	FInputActionKeyMapping KeySpacebar(FName("Jump"), EKeys::SpaceBar);
 	FInputActionKeyMapping KeyShift(FName("Run"), EKeys::LeftShift);
 
@@ -55,6 +59,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyA);
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseX);
 	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseY);
+	UPlayerInput::AddEngineDefinedAxisMapping(KeyMouseWheel);
 	UPlayerInput::AddEngineDefinedActionMapping(KeySpacebar);
 	UPlayerInput::AddEngineDefinedActionMapping(KeyShift);
 
@@ -62,6 +67,7 @@ void ADefaultCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ADefaultCharacter::MoveRight);
 	PlayerInputComponent->BindAxis(FName("CameraX"), this, &ADefaultCharacter::CameraX);
 	PlayerInputComponent->BindAxis(FName("CameraY"), this, &ADefaultCharacter::CameraY);
+	PlayerInputComponent->BindAxis(FName("CameraZoom"), this, &ADefaultCharacter::CameraZoom);
 	PlayerInputComponent->BindAction(FName("Jump"), IE_Pressed, this, &ADefaultCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Run"), IE_Pressed, this, &ADefaultCharacter::SprintStart);
 	PlayerInputComponent->BindAction(FName("Run"), IE_Released, this, &ADefaultCharacter::SprintEnd);
@@ -109,6 +115,24 @@ void ADefaultCharacter::SprintEnd()
 {
 	if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Black, TEXT("Called: SprintEnd()"));
 	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed;
+}
+
+void ADefaultCharacter::CameraZoom(float Value)
+{
+	if (CameraBoom)
+	{
+		if (Value > 0 && CameraBoom->TargetArmLength < 600.f)
+		{
+			float ZoomFactor = Value * 50.f;
+			CameraBoom->TargetArmLength += ZoomFactor;
+		}
+		else if (Value < 0 && CameraBoom->TargetArmLength >200.f)
+		{
+			float ZoomFactor = Value * 50.f;
+			CameraBoom->TargetArmLength += ZoomFactor;
+		}
+	}
+	else { if (GEngine) GEngine->AddOnScreenDebugMessage(-1, 10.f, FColor::Red, TEXT("ERROR: ADefaultCharacter::CameraLength(float Value)")); }
 }
 
 void ADefaultCharacter::Attack1()

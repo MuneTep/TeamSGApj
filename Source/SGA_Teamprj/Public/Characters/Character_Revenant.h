@@ -18,14 +18,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	USpringArmComponent* Revenant_CameraBoom;
-	UPROPERTY(EditDefaultsOnly)
-	UCameraComponent* Revenant_ViewCamera;
-
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<AGun> GunClass;
 

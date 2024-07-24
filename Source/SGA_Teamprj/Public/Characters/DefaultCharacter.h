@@ -16,13 +16,14 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera();
+	void SetCamera();
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void CameraX(float Value);
 	void CameraY(float Value);
 	void SprintStart();
 	void SprintEnd();
+	void CameraZoom(float Value);
 
 protected:		
 	float SprintMult;
