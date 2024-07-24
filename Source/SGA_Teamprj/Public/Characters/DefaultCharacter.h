@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -25,7 +25,7 @@ protected:
 	void SprintEnd();
 	void CameraZoom(float Value);
 
-protected:		
+protected:
 	float SprintMult;
 	float BaseSpeed;
 	virtual void Attack1();

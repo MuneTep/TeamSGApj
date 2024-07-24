@@ -33,4 +33,16 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	UParticleSystem* MuzzleFlash;
+
+	UPROPERTY(EditAnywhere)
+	UParticleSystem* HitMuzzleFlash;
+
+	UPROPERTY(EditAnywhere)
+	float MaxRange = 10000;
+
+	UPROPERTY(EditAnywhere)
+	float Damage = 10;
+
+	UPROPERTY(EditAnywhere)
+	FName BoneName;
 };

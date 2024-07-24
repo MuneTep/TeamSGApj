@@ -4,6 +4,9 @@
 #include "Gun.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
+#include "Engine/DamageEvents.h"
+
 
 // Sets default values
 AGun::AGun()
@@ -11,7 +14,7 @@ AGun::AGun()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));	
 	SetRootComponent(Root);
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Root);
@@ -20,6 +23,39 @@ AGun::AGun()
 void AGun::PullTrigger()
 {
 	UGameplayStatics::SpawnEmitterAttached(MuzzleFlash, Mesh, TEXT("gunEffect"));
+	APawn* OwnerPawn = Cast<APawn>(GetOwner());
+	if (OwnerPawn == nullptr)return;
+	AController* OwnerController = OwnerPawn->GetController();
+	if (OwnerController == nullptr)return;
+	
+	FVector Location;
+	FRotator Rotation;
+	OwnerController->GetPlayerViewPoint(Location, Rotation);
+
+	const FVector start = Location;
+	FVector End = Location + Rotation.Vector() * MaxRange;
+
+	// TODO : LineTrace
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	Params.AddIgnoredActor(GetOwner());
+	bool bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Location, End, ECollisionChannel::ECC_GameTraceChannel1,Params);
+	if (bSuccess)
+	{
+		//화면 표시 때 사용한 drawdebug들
+		//DrawDebugLine(GetWorld(), Hit.Location, End, FColor::Red, false, 1.0f);
+		//DrawDebugPoint(GetWorld(), Hit.Location, 20, FColor::Red, true);
+		//DrawDebugCamera(GetWorld(),Location,Rotation, 90, 2, FColor::Red, true);
+		FVector ShotDirection = -Rotation.Vector();
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitMuzzleFlash, Hit.Location, ShotDirection.Rotation());
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor != nullptr)
+		{
+			FPointDamageEvent DamageEvent(Damage, Hit, ShotDirection, nullptr);
+			HitActor->TakeDamage(Damage, DamageEvent, OwnerController, this);
+		}
+	}
 }
 
 // Called when the game starts or when spawned
