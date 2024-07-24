@@ -27,7 +27,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void PostInitializeComponents() override;
 private:
 
 	//Ã¼·Â
@@ -36,11 +36,28 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	float Health;
 
+	//ÄÞº¸ ¾îÅÃ
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool CanNextCombo;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	bool IsComboInputOn;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 CurrentCombo;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Attack, Meta = (AllowPrivateAccess = true))
+	int32 MaxCombo;
+	void Attack();
+	bool IsAttacking;
 	//¸ùÅ¸ÁÖ ÇÔ¼ö
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+
+	void AttackStartComboState();
+	void AttackEndComboState();
 	UPROPERTY()
-	class UAnimInstance* MyAnim;
+	class UMyAnimInstance* MyAnim;
 
 	//ÃÑ µô·¹ÀÌ Å¸ÀÌ¸Ó
 	float FireTimer;
