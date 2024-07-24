@@ -10,7 +10,6 @@ ACharacter_Revenant::ACharacter_Revenant()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetCamera();
 }
 
 void ACharacter_Revenant::BeginPlay() {
@@ -18,6 +17,10 @@ void ACharacter_Revenant::BeginPlay() {
 	//isShoot = true;
 	FireTimer = 0;
 	Health = MaxHealth;
+	//블루프린트 델리게이트와 c++ 델리게이트가 다른데 c++ 에서선언 한 딜리게이트를 
+	// 블루프린트 에서 사용하기 위해 adddynamic을 해준다 이걸 다이나믹 델리게이트 라고 칭함
+	// 델리게이트는 일반적인 다른 클래스 함수를 호출하여 리턴값을 받아오는게 아닌 
+	// 순수한 리턴값만 가져오게 하는 방식
 	MyAnim = Cast<UAnimInstance>(GetMesh()->GetAnimInstance());
 	check(nullptr != MyAnim);
 	MyAnim->OnMontageEnded.AddDynamic(this, &ACharacter_Revenant::OnAttackMontageEnded);
@@ -35,7 +38,6 @@ void ACharacter_Revenant::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-void ACharacter_Revenant::SetCamera() { Super::SetCamera(); }
 void ACharacter_Revenant::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

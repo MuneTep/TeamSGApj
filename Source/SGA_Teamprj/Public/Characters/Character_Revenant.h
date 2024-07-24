@@ -27,13 +27,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void SetCamera() override;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
-	USpringArmComponent* Revenant_CameraBoom;
-	UPROPERTY(EditDefaultsOnly)
-	UCameraComponent* Revenant_ViewCamera;
 
 	//체력
 	UPROPERTY(EditDefaultsOnly)
@@ -44,6 +39,7 @@ private:
 	//몽타주 함수
 	UFUNCTION()
 	void OnAttackMontageEnded(UAnimMontage* Montage, bool bInterrupted);
+	UPROPERTY()
 	class UAnimInstance* MyAnim;
 
 	//총 딜레이 타이머

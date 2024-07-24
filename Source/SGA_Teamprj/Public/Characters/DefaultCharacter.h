@@ -15,16 +15,14 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-
 	virtual void BeginPlay() override;
-	virtual void SetCamera();
+	void SetCamera();
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 	void CameraX(float Value);
 	void CameraY(float Value);
 	void SprintStart();
 	void SprintEnd();
-	// ÁÜ ÇÔ¼ö Ãß°¡
 	void CameraZoom(float Value);
 
 protected:
