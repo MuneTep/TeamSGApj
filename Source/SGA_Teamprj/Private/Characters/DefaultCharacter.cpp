@@ -152,28 +152,7 @@ void ADefaultCharacter::JumpEnd()
 
 void ADefaultCharacter::Attack()
 {
-	// RayCast
-	FVector Start = GetActorLocation(); // 레이캐스트의 시작 지점
-	FVector ForwardVector = GetActorForwardVector(); // 캐릭터의 앞 방향 벡터
-	FVector End = Start + (ForwardVector * 1000.0f); // 레이캐스트의 끝 지점 (1000.0f는 거리)
-
-	FHitResult HitResult;
-	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(this); // 자신을 무시하도록 설정 (옵션)
-
-	// 레이캐스트 실행
-	bool bHit = GetWorld()->LineTraceSingleByChannel(
-		HitResult,
-		Start,
-		End,
-		ECC_Visibility,
-		QueryParams
-	);
-
-	if (bHit)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
-	}
+	
 }
 
 void ADefaultCharacter::ZoomIn()

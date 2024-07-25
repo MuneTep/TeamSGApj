@@ -71,4 +71,6 @@ protected:
 	// Particle Fx
 	UNiagaraSystem* EnergyShockSystem;
 	UParticleSystem* HitPrimarySparkleSystem;
+
+	void SpawnEnergySphere();
 };

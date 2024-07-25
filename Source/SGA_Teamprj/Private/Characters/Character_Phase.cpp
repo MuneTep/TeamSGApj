@@ -3,6 +3,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
 #include "PhaseAnimInstance.h"
 
@@ -79,7 +80,33 @@ void ACharacter_Phase::MouseY(float Value)
 void ACharacter_Phase::Attack()
 {
 	//bIsAttack = true;
-	playNiagara();
+	//playNiagara();
+
+	// RayCast
+	FVector Start = GetActorLocation(); // 레이캐스트의 시작 지점
+	FVector ForwardVector = GetActorForwardVector(); // 캐릭터의 앞 방향 벡터
+	FVector End = Start + (ForwardVector * 1000.0f); // 레이캐스트의 끝 지점 (1000.0f는 거리)
+
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this); // 자신을 무시하도록 설정 (옵션)
+
+	// 레이캐스트 실행
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult,
+		Start,
+		End,
+		ECC_Visibility,
+		QueryParams
+	);
+
+	if (bHit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *HitResult.GetActor()->GetName());
+		SpawnEnergySphere();
+	}
+
+	
 	Super::Attack();
 }
 
@@ -103,6 +130,34 @@ void ACharacter_Phase::JumpStart()
 void ACharacter_Phase::HandleCharacterHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	OnCharacterHit.Broadcast(HitComponent, OtherActor, OtherComponent, NormalImpulse, Hit);
+}
+
+void ACharacter_Phase::SpawnEnergySphere()
+{
+	FName path = TEXT("/Script/Engine.Blueprint'/Game/Character_Phase/BP_EnergySphere.BP_EnergySphere'");
+	/*UBlueprint* ObjectToSpawn =
+		Cast<UBlueprint>(StaticLoadObject(UBlueprint::StaticClass(), NULL, *path.ToString()));
+	FActorSpawnParameters spawnParams;
+	FRotator rotator;
+	FVector spawnLocation = FVector::ZeroVector;
+
+	GetWorld()->SpawnActor<AActor>(ObjectToSpawn->GeneratedClass, spawnLocation, rotator, spawnParams);*/
+	TArray<AActor*> FoundActors;
+	UClass* GeneratedBP = Cast<UClass>(StaticLoadObject(UClass::StaticClass(), NULL, *path.ToString())); 
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), GeneratedBP, FoundActors);
+	
+	if (FoundActors.Num() == 0) 
+	{ 
+		FTransform transform = FTransform::Identity;
+		GetWorld()->SpawnActor<AActor>(GeneratedBP, transform);
+	}
+	else 
+	{ 
+		for(auto & act : FoundActors) 
+		{ 
+			UE_LOG(LogTemp, Warning, TEXT("Hit Actor: %s"), *act->GetFullName());
+		} 
+	}
 }
 
 
